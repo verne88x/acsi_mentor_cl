@@ -5,6 +5,10 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import styles from './login.module.css'
 
+interface ProfileData {
+  role: string
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,34 +22,41 @@ export default function LoginPage() {
     setError(null)
     setLoading(true)
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
-    if (error) {
-      setError(error.message)
+    if (signInError) {
+      setError(signInError.message)
       setLoading(false)
       return
     }
 
-    // Get user role and redirect
-    const { data: profile } = await supabase
+    // Get user
+    const { data: userData } = await supabase.auth.getUser()
+    
+    if (!userData.user) {
+      setError('Failed to get user')
+      setLoading(false)
+      return
+    }
+
+    // Get user role
+    const { data: profileData } = await supabase
       .from('profiles')
       .select('role')
-      .eq('id', (await supabase.auth.getUser()).data.user?.id)
+      .eq('id', userData.user.id)
       .single()
 
-    if (profile && 'role' in profile) {
-      if (profile.role === 'mentor') {
-        router.push('/mentor')
-      } else if (profile.role === 'school_admin') {
-        router.push('/school-admin')
-      } else if (profile.role === 'acsi_admin') {
-        router.push('/admin')
-      } else {
-        router.push('/')
-      }
+    const profile = profileData as ProfileData | null
+
+    if (profile?.role === 'mentor') {
+      router.push('/mentor')
+    } else if (profile?.role === 'school_admin') {
+      router.push('/school-admin')
+    } else if (profile?.role === 'acsi_admin') {
+      router.push('/admin')
     } else {
       router.push('/')
     }
