@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill,
+.pillActive {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid #d1d5db;
+  background: white;
+  color: #374151;
+}
+
+.pill:hover {
+  border-color: #667eea;
+  transform: scale(1.05);
+}
+
+.pillActive {
+  border-color: #667eea;
+  background: #667eea;
+  color: white;
+}
