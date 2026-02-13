@@ -33,14 +33,19 @@ export default function LoginPage() {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
+      .eq('id', (await supabase.auth.getUser()).data.user?.id)
       .single()
 
-    if (profile?.role === 'mentor') {
-      router.push('/mentor')
-    } else if (profile?.role === 'school_admin') {
-      router.push('/school-admin')
-    } else if (profile?.role === 'acsi_admin') {
-      router.push('/admin')
+    if (profile && 'role' in profile) {
+      if (profile.role === 'mentor') {
+        router.push('/mentor')
+      } else if (profile.role === 'school_admin') {
+        router.push('/school-admin')
+      } else if (profile.role === 'acsi_admin') {
+        router.push('/admin')
+      } else {
+        router.push('/')
+      }
     } else {
       router.push('/')
     }
