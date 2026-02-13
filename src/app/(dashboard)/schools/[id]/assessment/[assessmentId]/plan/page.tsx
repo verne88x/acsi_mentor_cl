@@ -1,6 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import ActionPlanGenerator from '@/components/ActionPlanGenerator'
+import { Assessment, School } from '@/types'
+
+interface AssessmentWithSchool extends Assessment {
+  school: School
+}
 
 export default async function ActionPlanPage({
   params,
@@ -9,7 +14,7 @@ export default async function ActionPlanPage({
 }) {
   const supabase = await createClient()
 
-  const { data: assessment, error } = await supabase
+  const { data, error } = await supabase
     .from('assessments')
     .select(`
       *,
@@ -19,7 +24,13 @@ export default async function ActionPlanPage({
     .eq('school_id', params.id)
     .single()
 
-  if (error || !assessment) {
+  if (error || !data) {
+    redirect(`/schools/${params.id}`)
+  }
+
+  const assessment = data as unknown as AssessmentWithSchool
+  
+  if (!assessment.school) {
     redirect(`/schools/${params.id}`)
   }
 
