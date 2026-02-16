@@ -96,10 +96,10 @@ export default function AssessmentForm({ school, userId }: AssessmentFormProps) 
           school_id: school.id,
           conducted_by: userId,
           assessment_date: new Date().toISOString().split('T')[0],
-          status,
-          responses,
+          status: status,
+          responses: responses,
           overall_score: overallScore,
-        })
+        } as any)
         .select()
         .single()
 
