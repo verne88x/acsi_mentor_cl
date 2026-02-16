@@ -37,7 +37,7 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
 
     try {
       // Create action plan
-      const { data: plan, error: planError } = await supabase
+      const { data, error: planError } = await supabase
         .from('action_plans')
         .insert({
           school_id: school.id,
@@ -45,13 +45,15 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
           created_by: assessment.conducted_by,
           title: `Action Plan - ${new Date().toLocaleDateString()}`,
           description: `Generated from health check assessment`,
-          status: 'active',
+          status: 'active' as const,
           start_date: new Date().toISOString().split('T')[0],
-        })
+        } as any)
         .select()
         .single()
 
       if (planError) throw planError
+      
+      const plan = data as any
 
       // Create action items
       const items = suggestedActions.map((action) => ({
@@ -66,7 +68,7 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
 
       const { error: itemsError } = await supabase
         .from('action_items')
-        .insert(items)
+        .insert(items as any)
 
       if (itemsError) throw itemsError
 
