@@ -105,8 +105,10 @@ export default function AssessmentForm({ school, userId }: AssessmentFormProps) 
 
       if (error) throw error
 
+      const assessmentData = data as any
+
       if (status === 'completed') {
-        router.push(`/schools/${school.id}/assessment/${data.id}/plan`)
+        router.push(`/schools/${school.id}/assessment/${assessmentData.id}/plan`)
       } else {
         router.push(`/schools/${school.id}`)
       }
