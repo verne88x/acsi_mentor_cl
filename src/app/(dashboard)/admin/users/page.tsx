@@ -16,6 +16,7 @@ export default function AdminUsersPage() {
   const supabase = createClient()
   const [users, setUsers] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
+  const [updating, setUpdating] = useState<string | null>(null)
 
   useEffect(() => {
     loadUsers()
@@ -24,18 +25,38 @@ export default function AdminUsersPage() {
   async function loadUsers() {
     const { data } = await supabase
       .from('profiles')
-      .select('*')
+      .select('id, email, full_name, role, created_at')
       .order('created_at', { ascending: false })
-    setUsers((data as Profile[]) || [])
+    setUsers((data || []) as Profile[])
     setLoading(false)
   }
 
   async function updateRole(userId: string, newRole: string) {
-    await supabase
-      .from('profiles')
-      .update({ role: newRole as 'mentor' | 'school_admin' | 'acsi_admin' })
-      .eq('id', userId)
-    loadUsers()
+    setUpdating(userId)
+    try {
+      // Use a direct fetch to Supabase REST API to bypass TypeScript issues
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey || '',
+          'Authorization': `Bearer ${session?.access_token || ''}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ role: newRole })
+      })
+      
+      await loadUsers()
+    } catch (err) {
+      console.error('Error updating role:', err)
+    } finally {
+      setUpdating(null)
+    }
   }
 
   const getRoleColor = (role: string) => {
@@ -56,9 +77,7 @@ export default function AdminUsersPage() {
   }
 
   if (loading) return (
-    <div style={{ padding: '4rem', textAlign: 'center', color: '#6b7280' }}>
-      Loading...
-    </div>
+    <div style={{ padding: '4rem', textAlign: 'center', color: '#6b7280' }}>Loading...</div>
   )
 
   return (
@@ -68,10 +87,7 @@ export default function AdminUsersPage() {
           <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#1f2937', margin: '0 0 0.5rem 0' }}>Users</h1>
           <p style={{ color: '#6b7280', margin: 0 }}>Manage all users and their roles</p>
         </div>
-        <Link
-          href="/admin/users/invite"
-          style={{ padding: '0.75rem 1.5rem', background: '#667eea', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: 600, whiteSpace: 'nowrap' }}
-        >
+        <Link href="/admin/users/invite" style={{ padding: '0.75rem 1.5rem', background: '#667eea', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: 600 }}>
           + Invite User
         </Link>
       </div>
@@ -90,9 +106,7 @@ export default function AdminUsersPage() {
           <tbody>
             {users.map((user) => (
               <tr key={user.id} style={{ borderTop: '1px solid #f3f4f6' }}>
-                <td style={{ padding: '1rem 1.5rem', fontWeight: 500, color: '#1f2937' }}>
-                  {user.full_name || '—'}
-                </td>
+                <td style={{ padding: '1rem 1.5rem', fontWeight: 500, color: '#1f2937' }}>{user.full_name || '—'}</td>
                 <td style={{ padding: '1rem 1.5rem', color: '#6b7280' }}>{user.email}</td>
                 <td style={{ padding: '1rem 1.5rem' }}>
                   <span style={{ padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 600, ...getRoleColor(user.role) }}>
@@ -105,6 +119,7 @@ export default function AdminUsersPage() {
                 <td style={{ padding: '1rem 1.5rem' }}>
                   <select
                     value={user.role}
+                    disabled={updating === user.id}
                     onChange={(e) => updateRole(user.id, e.target.value)}
                     style={{ padding: '0.375rem 0.75rem', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '0.875rem', color: '#374151', cursor: 'pointer', fontFamily: 'inherit' }}
                   >
@@ -112,6 +127,7 @@ export default function AdminUsersPage() {
                     <option value="mentor">Mentor</option>
                     <option value="acsi_admin">Admin</option>
                   </select>
+                  {updating === user.id && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', color: '#9ca3af' }}>Saving...</span>}
                 </td>
               </tr>
             ))}
