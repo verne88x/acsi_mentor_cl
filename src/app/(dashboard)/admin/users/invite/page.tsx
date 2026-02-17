@@ -11,7 +11,8 @@ export default function InviteUserPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
-  const [successMsg, setSuccessMsg] = useState('')
+  const [createdEmail, setCreatedEmail] = useState('')
+  const [createdPassword, setCreatedPassword] = useState('')
 
   const [form, setForm] = useState({
     email: '',
@@ -30,7 +31,6 @@ export default function InviteUserPage() {
     setSaving(true)
 
     try {
-      // Step 1: Create user
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
@@ -44,24 +44,10 @@ export default function InviteUserPage() {
 
       if (signUpError) throw signUpError
 
-      // Step 2: Update profile via raw SQL approach
-      if (data.user) {
-        const { error: updateError } = await supabase
-          .from('profiles')
-          .update({ 
-            role: form.role as 'mentor' | 'school_admin' | 'acsi_admin', 
-            full_name: form.full_name 
-          })
-          .eq('id', data.user.id)
-          .select()
-        
-        // Ignore update error - trigger will handle role from metadata
-        console.log('Profile update:', updateError?.message || 'ok')
-      }
-
-      setSuccessMsg(`User ${form.email} created! Share the password: ${form.password}`)
+      setCreatedEmail(form.email)
+      setCreatedPassword(form.password)
       setSuccess(true)
-      setTimeout(() => router.push('/admin/users'), 4000)
+      setTimeout(() => router.push('/admin/users'), 5000)
     } catch (err: any) {
       setError(err.message || 'Failed to create user')
     } finally {
@@ -86,9 +72,11 @@ export default function InviteUserPage() {
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1f2937', margin: '0 0 1rem 0' }}>User Created!</h2>
           <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
-            <p style={{ margin: 0, color: '#166534', fontSize: '0.875rem' }}>{successMsg}</p>
+            <p style={{ margin: '0 0 0.5rem 0', color: '#166534', fontSize: '0.875rem' }}><strong>Email:</strong> {createdEmail}</p>
+            <p style={{ margin: 0, color: '#166534', fontSize: '0.875rem' }}><strong>Password:</strong> {createdPassword}</p>
           </div>
-          <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>Redirecting to users list in 4 seconds...</p>
+          <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '0.5rem' }}>⚠️ Share these credentials with the user!</p>
+          <p style={{ color: '#9ca3af', fontSize: '0.75rem' }}>Redirecting in 5 seconds...</p>
         </div>
       </div>
     )
@@ -151,7 +139,7 @@ export default function InviteUserPage() {
               style={inputStyle}
             />
             <p style={{ fontSize: '0.75rem', color: '#9ca3af', margin: '0.25rem 0 0 0' }}>
-              Share this password with the user - they can change it later
+              Share this password with the user
             </p>
           </div>
 
@@ -168,6 +156,9 @@ export default function InviteUserPage() {
               <option value="school_admin">School Admin</option>
               <option value="acsi_admin">ACSI Admin</option>
             </select>
+            <p style={{ fontSize: '0.75rem', color: '#f59e0b', margin: '0.25rem 0 0 0' }}>
+              ⚠️ After creating, go to Users list and set the role manually if needed
+            </p>
           </div>
 
           {error && (
