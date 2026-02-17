@@ -36,16 +36,17 @@ export default function EditSchoolPage({ params }: { params: { id: string } }) {
       .single()
     
     if (data) {
+      const school = data as any
       setForm({
-        name: data.name || '',
-        county: data.county || '',
-        town: data.town || '',
-        address: data.address || '',
-        phone: data.phone || '',
-        email: data.email || '',
-        head_teacher: data.head_teacher || '',
-        student_count: data.student_count?.toString() || '',
-        staff_count: data.staff_count?.toString() || '',
+        name: school.name || '',
+        county: school.county || '',
+        town: school.town || '',
+        address: school.address || '',
+        phone: school.phone || '',
+        email: school.email || '',
+        head_teacher: school.head_teacher || '',
+        student_count: school.student_count?.toString() || '',
+        staff_count: school.staff_count?.toString() || '',
       })
     }
     setLoading(false)
