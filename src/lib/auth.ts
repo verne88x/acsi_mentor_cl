@@ -75,7 +75,7 @@ export async function getUserSchools() {
 
   if (error || !data) return []
   
-  return data.map(item => item.schools).filter(Boolean)
+  return data.map((item: any) => item.schools).filter(Boolean)
 }
 
 /**
