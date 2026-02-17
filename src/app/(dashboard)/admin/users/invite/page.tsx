@@ -11,6 +11,7 @@ export default function InviteUserPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [successMsg, setSuccessMsg] = useState('')
 
   const [form, setForm] = useState({
     email: '',
@@ -29,6 +30,7 @@ export default function InviteUserPage() {
     setSaving(true)
 
     try {
+      // Step 1: Create user
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
@@ -42,15 +44,24 @@ export default function InviteUserPage() {
 
       if (signUpError) throw signUpError
 
+      // Step 2: Update profile via raw SQL approach
       if (data.user) {
-        await supabase
+        const { error: updateError } = await supabase
           .from('profiles')
-          .update({ role: form.role, full_name: form.full_name } as any)
+          .update({ 
+            role: form.role as 'mentor' | 'school_admin' | 'acsi_admin', 
+            full_name: form.full_name 
+          })
           .eq('id', data.user.id)
+          .select()
+        
+        // Ignore update error - trigger will handle role from metadata
+        console.log('Profile update:', updateError?.message || 'ok')
       }
 
+      setSuccessMsg(`User ${form.email} created! Share the password: ${form.password}`)
       setSuccess(true)
-      setTimeout(() => router.push('/admin/users'), 2000)
+      setTimeout(() => router.push('/admin/users'), 4000)
     } catch (err: any) {
       setError(err.message || 'Failed to create user')
     } finally {
@@ -71,10 +82,13 @@ export default function InviteUserPage() {
   if (success) {
     return (
       <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-        <div style={{ background: 'white', borderRadius: '12px', padding: '4rem 2rem', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+        <div style={{ background: 'white', borderRadius: '12px', padding: '3rem 2rem', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1f2937', margin: '0 0 0.5rem 0' }}>User Created!</h2>
-          <p style={{ color: '#6b7280' }}>Redirecting to users list...</p>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1f2937', margin: '0 0 1rem 0' }}>User Created!</h2>
+          <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
+            <p style={{ margin: 0, color: '#166534', fontSize: '0.875rem' }}>{successMsg}</p>
+          </div>
+          <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>Redirecting to users list in 4 seconds...</p>
         </div>
       </div>
     )
@@ -95,7 +109,6 @@ export default function InviteUserPage() {
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-
           <div>
             <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.5rem' }}>
               Full Name *
