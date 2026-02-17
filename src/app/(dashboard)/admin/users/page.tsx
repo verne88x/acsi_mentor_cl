@@ -33,7 +33,7 @@ export default function AdminUsersPage() {
   async function updateRole(userId: string, newRole: string) {
     await supabase
       .from('profiles')
-      .update({ role: newRole } as any)
+      .update({ role: newRole as 'mentor' | 'school_admin' | 'acsi_admin' })
       .eq('id', userId)
     loadUsers()
   }
