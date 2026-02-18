@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { ActionPlan, ActionItem } from '@/types'
+import { generateActionPlanPDF } from '@/lib/pdf/actionPlanPdfGenerator'
 
 interface ActionPlanViewProps {
   plan: ActionPlan & {
@@ -17,6 +18,7 @@ export default function ActionPlanView({ plan }: ActionPlanViewProps) {
   const router = useRouter()
   const supabase = createClient()
   const [updating, setUpdating] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -71,6 +73,18 @@ export default function ActionPlanView({ plan }: ActionPlanViewProps) {
       alert('Failed to update status')
     } finally {
       setUpdating(false)
+    }
+  }
+
+  const handleExportPDF = async () => {
+    setExporting(true)
+    try {
+      await generateActionPlanPDF(plan)
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      alert('Failed to generate PDF. Please try again.')
+    } finally {
+      setExporting(false)
     }
   }
 
@@ -157,6 +171,26 @@ export default function ActionPlanView({ plan }: ActionPlanViewProps) {
             <strong>By:</strong> {plan.creator?.full_name || plan.creator?.email}
           </div>
         </div>
+      </div>
+
+      {/* Export PDF Button */}
+      <div style={{ marginBottom: '2rem' }}>
+        <button
+          onClick={handleExportPDF}
+          disabled={exporting}
+          style={{
+            padding: '0.75rem 1.5rem',
+            background: exporting ? '#9ca3af' : '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            cursor: exporting ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {exporting ? 'Generating PDF...' : 'Export as PDF'}
+        </button>
       </div>
 
       {/* Action Items by Domain */}
