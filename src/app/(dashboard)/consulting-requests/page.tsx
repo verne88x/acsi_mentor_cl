@@ -48,10 +48,10 @@ export default async function ConsultingRequestsPage() {
   }
 
   const statusCounts = {
-    pending: requests?.filter(r => r.status === 'pending').length || 0,
-    reviewed: requests?.filter(r => r.status === 'reviewed').length || 0,
-    contacted: requests?.filter(r => r.status === 'contacted').length || 0,
-    completed: requests?.filter(r => r.status === 'completed').length || 0,
+    pending: requests?.filter((r: any) => r.status === 'pending').length || 0,
+    reviewed: requests?.filter((r: any) => r.status === 'reviewed').length || 0,
+    contacted: requests?.filter((r: any) => r.status === 'contacted').length || 0,
+    completed: requests?.filter((r: any) => r.status === 'completed').length || 0,
   }
 
   return (
