@@ -93,14 +93,15 @@ export interface MentorNote {
   updated_at: string;
 }
 
-// Health Check Assessment Types
+// Health Check Assessment Types (PSI-based)
 export type DomainCode = 
-  | 'LEADERSHIP'
-  | 'TEACHING'
-  | 'GOVERNANCE'
-  | 'CHILD_PROTECTION'
-  | 'FINANCE'
-  | 'SPIRITUAL';
+  | 'FOUNDATIONS'          // PSI Standard 1
+  | 'LEADERSHIP'           // PSI Standard 2
+  | 'TEACHING'             // PSI Standard 3
+  | 'FINANCE'              // PSI Standard 4
+  | 'SPIRITUAL'            // PSI Standard 5
+  | 'CULTURE'              // PSI Standard 6
+  | 'IMPROVEMENT';         // PSI Standard 7
 
 export interface Question {
   id: string;
