@@ -80,7 +80,7 @@ export default async function SchoolDetailPage({
             href={`/schools/${params.id}/consulting-request`}
             className={styles.secondaryButton}
           >
-            Request Consulting
+            Consultation Form
           </Link>
 
           <Link
@@ -95,13 +95,6 @@ export default async function SchoolDetailPage({
             className={styles.secondaryButton}
           >
             View Past Assessments
-          </Link>
-
-          <Link
-            href={`/schools/${params.id}/notes`}
-            className={styles.secondaryButton}
-          >
-            Mentor Notes
           </Link>
 
           <Link
