@@ -22,7 +22,7 @@ export default async function ConsultingRequestsPage() {
     redirect('/mentor')
   }
 
-  const { data: requests } = await supabase
+  const { data: requestsData } = await supabase
     .from('consulting_requests')
     .select(`
       *,
@@ -30,6 +30,8 @@ export default async function ConsultingRequestsPage() {
       creator:profiles!created_by(full_name, email)
     `)
     .order('created_at', { ascending: false })
+
+  const requests = requestsData as any
 
   const getStatusColor = (status: string) => {
     switch (status) {
