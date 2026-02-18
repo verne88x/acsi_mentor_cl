@@ -10,11 +10,13 @@ export default async function ConsultingRequestsPage() {
     redirect('/login')
   }
 
-  const { data: profile } = await supabase
+  const { data: profileData } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single()
+
+  const profile = profileData as any
 
   if (!profile || !['mentor', 'acsi_admin'].includes(profile.role)) {
     redirect('/mentor')
