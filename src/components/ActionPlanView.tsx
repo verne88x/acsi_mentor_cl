@@ -48,12 +48,22 @@ export default function ActionPlanView({ plan }: ActionPlanViewProps) {
   const handleStatusChange = async (itemId: string, newStatus: string) => {
     setUpdating(true)
     try {
-      const { error } = await supabase
-        .from('action_items')
-        .update({ status: newStatus } as any)
-        .eq('id', itemId)
+      const session = await supabase.auth.getSession()
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-      if (error) throw error
+      const response = await fetch(`${supabaseUrl}/rest/v1/action_items?id=eq.${itemId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey!,
+          'Authorization': `Bearer ${session?.data.session?.access_token}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ status: newStatus })
+      })
+
+      if (!response.ok) throw new Error('Failed to update')
 
       router.refresh()
     } catch (error) {
