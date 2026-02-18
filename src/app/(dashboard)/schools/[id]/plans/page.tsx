@@ -134,14 +134,6 @@ export default async function ActionPlansPage({
                   color: 'inherit',
                   transition: 'all 0.2s',
                 }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.borderColor = '#3b82f6'
-                  e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)'
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.borderColor = '#e5e7eb'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
               >
                 <div style={{
                   display: 'flex',
