@@ -5,6 +5,9 @@ export type AssessmentStatus = 'draft' | 'completed';
 export type ActionPlanStatus = 'draft' | 'active' | 'completed' | 'archived';
 export type ActionItemStatus = 'pending' | 'in_progress' | 'completed' | 'blocked';
 export type NoteType = 'visit' | 'phone_call' | 'observation' | 'other';
+export type ConsultingRequestStatus = 'pending' | 'reviewed' | 'contacted' | 'completed';
+export type SchoolType = 'primary' | 'secondary' | 'other';
+export type Timeline = '1-3 months' | '3-6 months' | 'next year';
 
 export interface Profile {
   id: string;
@@ -153,4 +156,42 @@ export interface AssessmentWithDetails extends Assessment {
 
 export interface ActionPlanWithItems extends ActionPlan {
   action_items: ActionItem[];
+}
+
+export interface ConsultingRequest {
+  id: string;
+  school_id: string;
+  created_by: string;
+  contact_person: string | null;
+  contact_role: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  year_established: number | null;
+  total_students: number | null;
+  number_teachers: number | null;
+  affiliation: string | null;
+  school_type: SchoolType | null;
+  school_type_other: string | null;
+  current_status: string | null;
+  strategic_planning: number | null;
+  organizational_dev: number | null;
+  teacher_training: number | null;
+  fundraising: number | null;
+  values_integration: number | null;
+  communication_marketing: number | null;
+  other_need: string | null;
+  other_rating: number | null;
+  key_challenges: string | null;
+  desired_outcomes: string | null;
+  timeline: Timeline | null;
+  additional_comments: string | null;
+  status: ConsultingRequestStatus;
+  mentor_notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ConsultingRequestWithDetails extends ConsultingRequest {
+  school: School;
+  creator: Profile;
 }
