@@ -1,129 +1,230 @@
 import { Domain, DomainCode } from '@/types'
 
 /**
- * Health Check Assessment Configuration
+ * PSI-BASED Health Check Assessment Configuration
+ * Based on ACSI Paths to School Improvement (PSI) Standards Manual
  * 
- * This configuration can be easily modified to add/remove/change:
- * - Domains (categories)
- * - Questions within each domain
- * - Question text
+ * 7 PSI Standards with 5-6 questions each = 40 total questions
  * 
  * Structure:
- * - Each domain has a code (used as key in responses)
- * - Each domain has a label (displayed to users)
- * - Each domain has questions with unique IDs and text
+ * - Each domain corresponds to one PSI Standard
+ * - Questions are derived from key PSI indicators
+ * - Scoring: 1-5 scale matching PSI rubrics (Not Evident → Very Evident)
  */
 
 export const HEALTH_CHECK_DOMAINS: Domain[] = [
+  // STANDARD 1: FOUNDATIONS (6 questions)
   {
-    code: 'LEADERSHIP',
-    label: 'Leadership & Management',
+    code: 'FOUNDATIONS',
+    label: 'Foundations',
     questions: [
       {
-        id: 'ld_vision',
-        text: 'The school has a clear vision and priorities that guide decisions.',
+        id: 'fnd_faith',
+        text: 'The school has a written Statement of Faith that is biblical and Christ-centered.',
       },
       {
-        id: 'ld_accountability',
-        text: 'Leaders follow through on commitments and hold people accountable.',
+        id: 'fnd_philosophy',
+        text: 'The school has a documented Philosophy of Christian Education that guides leadership and teachers.',
       },
       {
-        id: 'ld_development',
-        text: 'Staff receive coaching, feedback, and professional development opportunities.',
+        id: 'fnd_mission',
+        text: 'Clear, written Vision and Mission statements exist that answer: Why does the school exist? Who does it serve? What does it deliver?',
+      },
+      {
+        id: 'fnd_outcomes',
+        text: 'The school has identified Schoolwide Expected Student Outcomes (what students should know, believe, and be able to do).',
+      },
+      {
+        id: 'fnd_worldview',
+        text: 'Biblical worldview integration is evident in the school\'s foundational documents.',
+      },
+      {
+        id: 'fnd_parent_ack',
+        text: 'Parents/guardians have signed acknowledgment recognizing the school\'s unique Christian mission.',
       },
     ],
   },
+
+  // STANDARD 2: LEADERSHIP & PERSONNEL (6 questions)
+  {
+    code: 'LEADERSHIP',
+    label: 'Leadership & Personnel',
+    questions: [
+      {
+        id: 'ld_christ_centered',
+        text: 'The school has Christ-centered leadership with clear job descriptions for all staff.',
+      },
+      {
+        id: 'ld_team',
+        text: 'A leadership team (minimum 3 people) makes important decisions through prayerful conversation.',
+      },
+      {
+        id: 'ld_faith_statement',
+        text: 'All leadership and teachers have signed the school\'s Statement of Faith.',
+      },
+      {
+        id: 'ld_policies',
+        text: 'Written policies and procedures exist in an organized, easy-to-reference manual.',
+      },
+      {
+        id: 'ld_development',
+        text: 'Annual professional development is provided for administrators and teaching staff.',
+      },
+      {
+        id: 'ld_salaries',
+        text: 'The school provides fair salaries and demonstrates biblical stewardship of resources.',
+      },
+    ],
+  },
+
+  // STANDARD 3: TEACHING & LEARNING (7 questions)
   {
     code: 'TEACHING',
     label: 'Teaching & Learning',
     questions: [
       {
-        id: 'tch_planning',
-        text: 'Teachers plan lessons and use curriculum materials effectively.',
+        id: 'tch_curriculum',
+        text: 'The school has a curriculum plan that meets or exceeds the national curriculum.',
+      },
+      {
+        id: 'tch_worldview',
+        text: 'The curriculum plan is based on biblical truth and biblical worldview is integrated into all subjects.',
+      },
+      {
+        id: 'tch_descriptions',
+        text: 'Clear course/subject descriptions exist with learning objectives.',
       },
       {
         id: 'tch_assessment',
-        text: 'Student work is assessed regularly and feedback is given.',
+        text: 'Multiple forms of assessment are used to measure student achievement.',
       },
       {
-        id: 'tch_differentiation',
-        text: 'Teaching meets diverse learner needs (remedial, gifted, special needs).',
+        id: 'tch_communication',
+        text: 'Student progress is regularly communicated to parents/guardians.',
+      },
+      {
+        id: 'tch_ratio',
+        text: 'Student-to-teacher ratios allow for effective learning and relationships.',
+      },
+      {
+        id: 'tch_time',
+        text: 'Instructional time is protected and appropriate for effective student learning.',
       },
     ],
   },
-  {
-    code: 'GOVERNANCE',
-    label: 'Governance & Policies',
-    questions: [
-      {
-        id: 'gov_policies',
-        text: 'Key policies exist (HR, finance, safeguarding) and are followed.',
-      },
-      {
-        id: 'gov_oversight',
-        text: 'The Board provides effective oversight and strategic direction.',
-      },
-      {
-        id: 'gov_roles',
-        text: 'Decision-making roles are clear (Board vs. management).',
-      },
-    ],
-  },
-  {
-    code: 'CHILD_PROTECTION',
-    label: 'Child Protection & Safeguarding',
-    questions: [
-      {
-        id: 'cp_policy',
-        text: 'Child protection policy exists and is known by staff.',
-      },
-      {
-        id: 'cp_reporting',
-        text: 'Reporting procedures are clear and used when concerns arise.',
-      },
-      {
-        id: 'cp_environment',
-        text: 'The environment is safe (supervision, boundaries, physical safety).',
-      },
-      {
-        id: 'cp_training',
-        text: 'Staff receive safeguarding training and understand their responsibilities.',
-      },
-    ],
-  },
+
+  // STANDARD 4: FINANCES, FACILITIES, HEALTH & SAFETY (6 questions)
   {
     code: 'FINANCE',
-    label: 'Financial Stewardship',
+    label: 'Finances, Facilities, Health & Safety',
     questions: [
       {
         id: 'fin_budget',
-        text: 'A budget exists and is followed; spending is tracked against it.',
+        text: 'A budget exists accounting for fair salaries, instructional materials, and infrastructure maintenance.',
       },
       {
         id: 'fin_records',
-        text: 'Records are accurate (fees, receipts, expenses) and reconciled regularly.',
+        text: 'Student records are organized, current, protected, and include medical information.',
       },
       {
-        id: 'fin_fees',
-        text: 'Fee collection and arrears processes are consistent and fair.',
+        id: 'fin_space',
+        text: 'Classroom space is adequate for the number of students enrolled.',
+      },
+      {
+        id: 'fin_safety',
+        text: 'A written health and safety plan exists covering: illness/injury, abuse prevention, and campus security.',
+      },
+      {
+        id: 'fin_wash_basic',
+        text: 'The school provides: handwashing stations, separate gender toilets, clean drinking water, and seating for all students.',
+      },
+      {
+        id: 'fin_wash_standard',
+        text: 'The school has achieved at least the UNICEF WASH Two-Star standard for hygiene and sanitation.',
       },
     ],
   },
+
+  // STANDARD 5: SPIRITUAL FORMATION (6 questions)
   {
     code: 'SPIRITUAL',
     label: 'Spiritual Formation',
     questions: [
       {
-        id: 'sp_culture',
-        text: 'Christian values are visible in the school culture and relationships.',
+        id: 'sp_plan',
+        text: 'The school has a written plan for spiritual nurture and discipleship of students.',
       },
       {
-        id: 'sp_devotions',
-        text: 'Devotions/Bible teaching is planned and happens consistently.',
+        id: 'sp_bible',
+        text: 'Bible is taught regularly in a planned, purposeful way across all grade levels.',
       },
       {
-        id: 'sp_staff',
-        text: 'Staff model character and spiritual maturity in their work.',
+        id: 'sp_service',
+        text: 'Students are given opportunities to serve others and develop Christlike attitudes.',
+      },
+      {
+        id: 'sp_outcomes',
+        text: 'Schoolwide Expected Student Outcomes include spiritual formation goals (biblical knowledge, character, values).',
+      },
+      {
+        id: 'sp_assessment',
+        text: 'Spiritual formation outcomes are assessed annually.',
+      },
+      {
+        id: 'sp_staff_model',
+        text: 'Staff-student interactions consistently reflect the attitude of Christ.',
+      },
+    ],
+  },
+
+  // STANDARD 6: SCHOOL CULTURE (5 questions)
+  {
+    code: 'CULTURE',
+    label: 'School Culture',
+    questions: [
+      {
+        id: 'cul_unity',
+        text: 'The school culture displays unity, good attitudes, and support from staff, families, and community.',
+      },
+      {
+        id: 'cul_communication',
+        text: 'Regular, effective two-way communication occurs between school and parents/community.',
+      },
+      {
+        id: 'cul_conflict',
+        text: 'The school has established biblical principles for resolving conflicts (staff, parents, community).',
+      },
+      {
+        id: 'cul_non_discrimination',
+        text: 'The school has a non-discrimination policy that is evident in all actions, relationships, and programs.',
+      },
+      {
+        id: 'cul_diversity',
+        text: 'Christlike love and respect for diversity (ethnicity, gender) is modeled throughout the school.',
+      },
+    ],
+  },
+
+  // STANDARD 7: SCHOOL IMPROVEMENT & DEVELOPMENT PLAN (4 questions)
+  {
+    code: 'IMPROVEMENT',
+    label: 'School Improvement & Development',
+    questions: [
+      {
+        id: 'imp_csip',
+        text: 'A written Continuous School Improvement Plan (CSIP) exists with at least 4 major goals.',
+      },
+      {
+        id: 'imp_prof_dev',
+        text: 'The CSIP includes at least 2 goals focused on teacher professional development.',
+      },
+      {
+        id: 'imp_review',
+        text: 'The CSIP is reviewed and revised annually with input from school community stakeholders.',
+      },
+      {
+        id: 'imp_evidence',
+        text: 'The CSIP reflects progress toward schoolwide expected student outcomes with documented evidence.',
       },
     ],
   },
@@ -144,32 +245,37 @@ export function getDomainCodes(): DomainCode[] {
 }
 
 /**
- * Scoring guide for reference
+ * PSI-Based Scoring Guide (aligned with PSI rubrics)
+ * 1 = Not Evident
+ * 2 = Partially Evident  
+ * 3 = Evident
+ * 4 = Very Evident
+ * 5 = Exemplary (exceeds Very Evident)
  */
 export const SCORING_GUIDE = {
   1: {
-    label: 'Critical Need',
-    description: 'Major gaps; immediate intervention required',
+    label: 'Not Evident',
+    description: 'Practice/policy does not exist or is not implemented',
     color: '#dc2626', // red-600
   },
   2: {
-    label: 'Significant Gaps',
-    description: 'Many areas need improvement',
+    label: 'Partially Evident',
+    description: 'Practice exists but is incomplete or inconsistently applied',
     color: '#ea580c', // orange-600
   },
   3: {
-    label: 'Developing',
-    description: 'Basic practices in place, but inconsistent',
+    label: 'Evident',
+    description: 'Practice is established and consistently followed',
     color: '#eab308', // yellow-500
   },
   4: {
-    label: 'Good',
-    description: 'Solid practices, minor improvements needed',
+    label: 'Very Evident',
+    description: 'Practice is well-established with strong evidence of impact',
     color: '#22c55e', // green-500
   },
   5: {
-    label: 'Excellent',
-    description: 'Exemplary practices, sustainable systems',
+    label: 'Exemplary',
+    description: 'Practice is exemplary and recognized as a model for others',
     color: '#16a34a', // green-600
   },
 }
@@ -203,3 +309,11 @@ export function getScoreLabel(score: number): string {
   const rounded = Math.round(score)
   return SCORING_GUIDE[rounded as keyof typeof SCORING_GUIDE]?.label || 'Not rated'
 }
+
+/**
+ * Total question count for validation
+ */
+export const TOTAL_QUESTIONS = HEALTH_CHECK_DOMAINS.reduce(
+  (sum, domain) => sum + domain.questions.length,
+  0
+) // Should be 40
