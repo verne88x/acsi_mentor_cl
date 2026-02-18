@@ -50,7 +50,7 @@ export default function ActionPlanView({ plan }: ActionPlanViewProps) {
     try {
       const { error } = await supabase
         .from('action_items')
-        .update({ status: newStatus })
+        .update({ status: newStatus } as any)
         .eq('id', itemId)
 
       if (error) throw error
