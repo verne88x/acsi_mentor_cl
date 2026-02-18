@@ -6,7 +6,12 @@ export type ActionPlanStatus = 'draft' | 'active' | 'completed' | 'archived';
 export type ActionItemStatus = 'pending' | 'in_progress' | 'completed' | 'blocked';
 export type NoteType = 'visit' | 'phone_call' | 'observation' | 'other';
 export type ConsultingRequestStatus = 'pending' | 'reviewed' | 'contacted' | 'completed';
-export type SchoolType = 'primary' | 'secondary' | 'other';
+export type SchoolType = 
+  | 'pre-primary' 
+  | 'primary' 
+  | 'junior-secondary' 
+  | 'senior-secondary' 
+  | 'other';
 export type Timeline = '1-3 months' | '3-6 months' | 'next year';
 
 export interface Profile {
@@ -170,7 +175,7 @@ export interface ConsultingRequest {
   total_students: number | null;
   number_teachers: number | null;
   affiliation: string | null;
-  school_type: SchoolType | null;
+  school_types: string[] | null; // Array for multiple selections
   school_type_other: string | null;
   current_status: string | null;
   strategic_planning: number | null;
