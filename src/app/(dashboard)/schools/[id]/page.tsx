@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import styles from './school.module.css'
-import { School } from '@/types'
 
 export default async function SchoolDetailPage({
   params,
@@ -11,17 +10,15 @@ export default async function SchoolDetailPage({
 }) {
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  const { data: school, error } = await supabase
     .from('schools')
     .select('*')
     .eq('id', params.id)
     .single()
 
-  if (error || !data) {
+  if (error || !school) {
     redirect('/mentor')
   }
-
-  const school = data as School
 
   // Get recent assessments
   const { data: assessments } = await supabase
@@ -75,6 +72,13 @@ export default async function SchoolDetailPage({
           >
             <span>New Health Check Assessment</span>
             <span>→</span>
+          </Link>
+
+          <Link
+            href={`/schools/${params.id}/edit`}
+            className={styles.secondaryButton}
+          >
+            Edit School Info
           </Link>
 
           <Link
