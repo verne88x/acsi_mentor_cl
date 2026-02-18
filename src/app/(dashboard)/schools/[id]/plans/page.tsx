@@ -10,15 +10,17 @@ export default async function ActionPlansPage({
   const supabase = await createClient()
 
   // Get school
-  const { data: school, error: schoolError } = await supabase
+  const { data: schoolData, error: schoolError } = await supabase
     .from('schools')
     .select('*')
     .eq('id', params.id)
     .single()
 
-  if (schoolError || !school) {
+  if (schoolError || !schoolData) {
     redirect('/mentor')
   }
+
+  const school = schoolData as any
 
   // Get all action plans for this school
   const { data: actionPlans } = await supabase
