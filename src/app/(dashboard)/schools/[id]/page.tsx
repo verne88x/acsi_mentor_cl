@@ -10,17 +10,15 @@ export default async function SchoolDetailPage({
 }) {
   const supabase = await createClient()
 
-  const { data: schoolData, error } = await supabase
+  const { data: school, error } = await supabase
     .from('schools')
     .select('*')
     .eq('id', params.id)
     .single()
 
-  if (error || !schoolData) {
+  if (error || !school) {
     redirect('/mentor')
   }
-
-  const school = schoolData as any
 
   // Get recent assessments
   const { data: assessments } = await supabase
@@ -74,6 +72,13 @@ export default async function SchoolDetailPage({
           >
             <span>New Health Check Assessment</span>
             <span>→</span>
+          </Link>
+
+          <Link
+            href={`/schools/${params.id}/consulting-request`}
+            className={styles.secondaryButton}
+          >
+            Request Consulting
           </Link>
 
           <Link
