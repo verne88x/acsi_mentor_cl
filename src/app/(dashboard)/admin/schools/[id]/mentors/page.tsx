@@ -42,7 +42,7 @@ export default function SchoolMentorsPage({ params }: { params: { id: string } }
       .select('id, name')
       .eq('id', params.id)
       .single()
-    setSchool(schoolData as School)
+    setSchool(schoolData as School | null)
 
     // Load assigned mentors
     const { data: members } = await supabase
