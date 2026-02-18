@@ -63,7 +63,7 @@ export default async function ConsultingRequestPage({
             marginBottom: '0.5rem',
             color: '#111827'
           }}>
-            School Consulting Needs Assessment
+            Consultation Form
           </h1>
           <p style={{ 
             color: '#6b7280',
