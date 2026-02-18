@@ -31,9 +31,19 @@ export default function SchoolEditForm({ school }: SchoolEditFormProps) {
     setSaving(true)
 
     try {
-      const { error } = await supabase
-        .from('schools')
-        .update({
+      const session = await supabase.auth.getSession()
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/schools?id=eq.${school.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey!,
+          'Authorization': `Bearer ${session?.data.session?.access_token}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
           name: formData.name,
           county: formData.county || null,
           town: formData.town || null,
@@ -43,10 +53,10 @@ export default function SchoolEditForm({ school }: SchoolEditFormProps) {
           head_teacher: formData.head_teacher || null,
           student_count: formData.student_count ? parseInt(formData.student_count as string) : null,
           staff_count: formData.staff_count ? parseInt(formData.staff_count as string) : null,
-        } as any)
-        .eq('id', school.id)
+        })
+      })
 
-      if (error) throw error
+      if (!response.ok) throw new Error('Failed to update')
 
       router.push(`/schools/${school.id}`)
       router.refresh()
