@@ -43,7 +43,8 @@ export default async function AdminSchoolsPage() {
                 <td style={{padding: '1rem 1.5rem', color: '#6b7280'}}>{school.student_count || '—'}</td>
                 <td style={{padding: '1rem 1.5rem'}}>
                   <Link href={`/schools/${school.id}`} style={{color: '#667eea', marginRight: '1rem'}}>View</Link>
-                  <Link href={`/admin/schools/${school.id}/edit`} style={{color: '#667eea'}}>Edit</Link>
+                  <Link href={`/admin/schools/${school.id}/edit`} style={{color: '#667eea', marginRight: '1rem'}}>Edit</Link>
+                  <Link href={`/admin/schools/${school.id}/mentors`} style={{color: '#667eea'}}>Mentors</Link>
                 </td>
               </tr>
             ))}
