@@ -1,107 +1,136 @@
 import { PlanTemplates, DomainCode } from '@/types'
 
 /**
- * Action Plan Templates
+ * PSI-BASED Action Plan Templates
  * 
- * Pre-configured action plan templates based on assessment domains.
+ * Pre-configured action plan templates aligned with PSI Standards.
  * These are suggested starting points that can be customized by mentors.
  * 
  * Each template includes:
- * - Title: Focus area
+ * - Title: Focus area based on PSI Standard
  * - Actions: Specific steps to take
  * - KPIs: Measurable success indicators
  * - Owners: Suggested responsible parties
  */
 
 export const PLAN_TEMPLATES: PlanTemplates = {
-  LEADERSHIP: {
-    title: 'Strengthen leadership routines and accountability',
+  FOUNDATIONS: {
+    title: 'Establish clear foundational documents',
     actions: [
-      'Clarify 3 school priorities for the next 90 days and communicate to all staff',
-      'Introduce weekly leadership check-ins with follow-up list (owners + deadlines)',
-      'Start monthly classroom observation and feedback cycle',
+      'Develop and document a Statement of Faith that all staff review and sign',
+      'Write a Philosophy of Christian Education that guides instructional decisions',
+      'Create clear Vision, Mission, and Schoolwide Expected Student Outcomes statements',
+      'Have all parents sign acknowledgment of the school\'s Christian distinctives',
     ],
     kpis: [
-      'Weekly leadership meeting minutes exist for 8/12 weeks',
-      'At least 2 observations per teacher completed in 90 days',
-      'Staff can state the 3 priorities (spot check)',
+      '100% of staff have signed Statement of Faith',
+      'Philosophy document completed and shared with all staff',
+      'Vision/Mission displayed prominently in school',
+      '80% of parent acknowledgments collected',
     ],
-    owners: ['Headteacher', 'Deputy Headteacher'],
+    owners: ['Headteacher', 'Board Chair', 'Leadership Team'],
+  },
+
+  LEADERSHIP: {
+    title: 'Strengthen Christ-centered leadership and staff development',
+    actions: [
+      'Form a leadership team of 3+ that meets weekly for prayerful decision-making',
+      'Create clear job descriptions for all staff positions',
+      'Develop a policies and procedures manual covering key operational areas',
+      'Plan and deliver quarterly professional development for all teaching staff',
+    ],
+    kpis: [
+      'Leadership team meets weekly with documented decisions',
+      'Job descriptions exist for 100% of positions',
+      'Policy manual completed and shared with all staff',
+      'All teachers participate in at least 2 PD sessions per term',
+    ],
+    owners: ['Headteacher', 'Deputy Headteacher', 'Board'],
   },
 
   TEACHING: {
-    title: 'Improve lesson preparation and classroom practice',
+    title: 'Develop curriculum and improve instructional quality',
     actions: [
-      'Introduce a simple lesson plan template and require weekly submission',
-      'Run 2 peer-observation/coaching rounds using a short checklist',
-      'Agree on minimum standards for assessment and feedback',
+      'Create written curriculum plans for all subjects showing biblical integration',
+      'Introduce multiple forms of student assessment (not just exams)',
+      'Implement regular parent communication about student progress (monthly)',
+      'Review student-teacher ratios and class sizes for optimal learning',
     ],
     kpis: [
-      '80% of lesson plans submitted weekly',
-      '2 coaching rounds completed per teacher',
-      'Learner exercise books show feedback in 3 subjects',
+      'Curriculum plans exist for all subjects with biblical worldview integration',
+      'Teachers use at least 3 different assessment methods',
+      'Monthly progress reports sent to all parents',
+      'Class sizes below 35 students (or school-defined target)',
     ],
-    owners: ['Academic Dean', 'Deputy Headteacher'],
-  },
-
-  GOVERNANCE: {
-    title: 'Clarify governance roles and implement key policies',
-    actions: [
-      'Agree Board vs. school leadership roles and document decisions',
-      'Approve/update 3 key policies (finance, HR, safeguarding) and communicate',
-      'Set a monthly governance review (actions + follow-up)',
-    ],
-    kpis: [
-      'Policies approved and signed',
-      'Board minutes show follow-up actions monthly',
-      'Staff sign they received key policies',
-    ],
-    owners: ['Board Chair', 'Headteacher'],
-  },
-
-  CHILD_PROTECTION: {
-    title: 'Strengthen safeguarding and reporting practice',
-    actions: [
-      'Refresh safeguarding policy and reporting flow; display it visibly',
-      'Run staff training session on reporting and boundaries',
-      'Introduce supervision routines for breaks and dismissal time',
-    ],
-    kpis: [
-      '100% staff trained and signed attendance',
-      'Reporting pathway posted in 3 visible locations',
-      'Supervision rota used daily for 90 days',
-    ],
-    owners: ['Safeguarding Lead', 'Headteacher'],
+    owners: ['Academic Dean', 'Department Heads', 'Teachers'],
   },
 
   FINANCE: {
-    title: 'Improve budgeting and financial record-keeping',
+    title: 'Improve financial stewardship, facilities, and health/safety',
     actions: [
-      'Create a simple monthly budget tracker (planned vs. actual)',
-      'Standardize receipt and cashbook process; weekly reconciliation',
-      'Agree a fee arrears procedure and apply consistently',
+      'Create an annual budget accounting for salaries, materials, and maintenance',
+      'Organize and secure all student records (academic and medical)',
+      'Develop a written health and safety plan covering illness, abuse prevention, and emergencies',
+      'Achieve UNICEF WASH Two-Star standard (handwashing, toilets, water, hygiene)',
     ],
     kpis: [
-      'Monthly reconciliation completed for 3 months',
-      'Budget tracker updated monthly',
-      'Arrears reduced by X% (baseline vs. end)',
+      'Budget approved and tracked monthly',
+      'Student records organized in locked cabinets/secure digital system',
+      'Health & safety plan completed and staff trained',
+      'WASH assessment shows Two-Star compliance',
     ],
-    owners: ['Bursar', 'Headteacher'],
+    owners: ['Bursar', 'Headteacher', 'Facilities Manager'],
   },
 
   SPIRITUAL: {
-    title: 'Strengthen spiritual formation routines',
+    title: 'Strengthen spiritual formation and discipleship',
     actions: [
-      'Create a term plan for devotions/Bible teaching (themes, schedule)',
-      'Agree on 3 culture practices (language, discipline, relationships) to reinforce',
-      'Hold a monthly staff reflection/prayer meeting',
+      'Create a written plan for spiritual nurture across all grade levels',
+      'Establish daily Bible teaching schedule with planned curriculum',
+      'Organize monthly student service opportunities to develop Christlike attitudes',
+      'Define and assess spiritual formation outcomes (biblical knowledge, character, values)',
     ],
     kpis: [
-      'Devotion plan exists and is followed weekly',
-      'Monthly staff reflection held 3 times',
-      'Student behaviour incidents reduce in 90 days (baseline vs. end)',
+      'Spiritual formation plan documented and implemented',
+      'Bible taught daily in all classes',
+      'Students participate in at least 1 service activity per term',
+      'Spiritual outcomes assessed annually with documented results',
     ],
-    owners: ['Chaplain', 'Headteacher'],
+    owners: ['Chaplain', 'Headteacher', 'Class Teachers'],
+  },
+
+  CULTURE: {
+    title: 'Build a healthy, Christ-centered school culture',
+    actions: [
+      'Establish regular two-way communication channels with parents (monthly meetings, newsletters)',
+      'Develop biblical conflict resolution procedures and train all staff',
+      'Create and publish a non-discrimination policy evident in all school activities',
+      'Model Christlike love and respect for diversity in all relationships and programs',
+    ],
+    kpis: [
+      'Monthly parent meetings held with documented attendance',
+      '100% of staff trained in conflict resolution procedures',
+      'Non-discrimination policy published and signed by all staff',
+      'Parent/student surveys show positive culture ratings (80%+)',
+    ],
+    owners: ['Headteacher', 'Parent Liaison', 'Leadership Team'],
+  },
+
+  IMPROVEMENT: {
+    title: 'Implement continuous school improvement planning',
+    actions: [
+      'Develop a Continuous School Improvement Plan (CSIP) with at least 4 major goals',
+      'Include at least 2 goals focused specifically on teacher professional development',
+      'Review and revise the CSIP annually with input from staff, parents, and board',
+      'Document evidence of progress toward schoolwide expected student outcomes',
+    ],
+    kpis: [
+      'CSIP completed with 4+ goals, timelines, and responsible parties',
+      'At least 2 professional development goals with measurable outcomes',
+      'Annual CSIP review meeting held with stakeholder input',
+      'Documented evidence shows progress on student outcomes',
+    ],
+    owners: ['Headteacher', 'Board', 'Leadership Team'],
   },
 }
 
