@@ -43,7 +43,7 @@ export default function SchoolEditForm({ school }: SchoolEditFormProps) {
           head_teacher: formData.head_teacher || null,
           student_count: formData.student_count ? parseInt(formData.student_count as string) : null,
           staff_count: formData.staff_count ? parseInt(formData.staff_count as string) : null,
-        })
+        } as any)
         .eq('id', school.id)
 
       if (error) throw error
