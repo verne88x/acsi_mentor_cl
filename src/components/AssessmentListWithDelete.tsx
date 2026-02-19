@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
 export default function AssessmentListWithDelete({ assessments, schoolId, isMentor }: any) {
@@ -17,18 +16,15 @@ export default function AssessmentListWithDelete({ assessments, schoolId, isMent
     setDeleting(assessmentId)
 
     try {
-      const supabase = createClient()
-      
-      const { error } = await supabase
-        .from('assessments')
-        .delete()
-        .eq('id', assessmentId)
-      
-      if (error) {
-        throw error
+      const response = await fetch(`/api/assessments/${assessmentId}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Delete failed')
       }
-      
-      // Refresh the page
+
       router.refresh()
     } catch (error: any) {
       alert(`Failed to delete: ${error.message}`)
