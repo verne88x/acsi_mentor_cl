@@ -137,7 +137,7 @@ export async function generateAssessmentPDF(
     
     const scoreColor = getScoreColorRGB(domain.score)
     page.drawRectangle({ x: margin, y: yPosition - 60, width: contentWidth, height: 60, color: rgb(0.99, 0.99, 1), borderColor: rgb(0.90, 0.91, 0.93), borderWidth: 1 })
-    page.drawText(domain.domain.name, { x: margin + 15, y: yPosition - 25, size: 12, font: boldFont, color: textDark })
+    page.drawText((domain.domain as any).name, { x: margin + 15, y: yPosition - 25, size: 12, font: boldFont, color: textDark })
     page.drawText(domain.score.toFixed(1), { x: pageWidth - margin - 80, y: yPosition - 30, size: 24, font: boldFont, color: scoreColor })
     page.drawText(getScoreLabel(Math.round(domain.score)), { x: pageWidth - margin - 80, y: yPosition - 48, size: 8, font: regularFont, color: scoreColor })
     
@@ -175,7 +175,7 @@ export async function generateAssessmentPDF(
     page.drawRectangle({ x: margin, y: yPosition - 100, width: contentWidth, height: 100, color: lightGray, borderColor: getScoreColorRGB(priority.score), borderWidth: 2 })
     
     page.drawText(`Priority ${i + 1}`, { x: margin + 15, y: yPosition - 20, size: 10, font: boldFont, color: primary })
-    page.drawText(priority.domain.name, { x: margin + 15, y: yPosition - 38, size: 13, font: boldFont, color: textDark })
+    page.drawText((priority.domain as any).name, { x: margin + 15, y: yPosition - 38, size: 13, font: boldFont, color: textDark })
     page.drawText(`Current Score: ${priority.score.toFixed(1)} - ${getScoreLabel(Math.round(priority.score))}`, { x: margin + 15, y: yPosition - 56, size: 9, font: regularFont, color: getScoreColorRGB(priority.score) })
     
     const recommendations: Record<string, string> = {
@@ -188,7 +188,7 @@ export async function generateAssessmentPDF(
       'School Improvement': 'Establish clear vision, strategic planning, and assessment systems.',
     }
     
-    const recLines = wrapText(recommendations[priority.domain.name] || 'Focus on strengthening this area.', contentWidth - 50, 9)
+    const recLines = wrapText(recommendations[(priority.domain as any).name] || 'Focus on strengthening this area.', contentWidth - 50, 9)
     let recY = yPosition - 72
     for (const line of recLines) {
       page.drawText(line, { x: margin + 15, y: recY, size: 9, font: regularFont, color: textDark })
