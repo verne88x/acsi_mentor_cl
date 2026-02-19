@@ -148,7 +148,7 @@ export async function generateAssessmentPDF(
     }
     
     const scoreColor = getScoreColorRGB(domain.score)
-    const domainName = safeText((domain as any).domain?.name) || 'Standard'
+    const domainName = safeText((domain.domain as any)?.label) || 'Standard'
     
     page.drawRectangle({ x: margin, y: yPosition - 60, width: contentWidth, height: 60, color: rgb(0.99, 0.99, 1), borderColor: rgb(0.90, 0.91, 0.93), borderWidth: 1 })
     page.drawText(domainName, { x: margin + 15, y: yPosition - 25, size: 12, font: boldFont, color: textDark })
@@ -179,7 +179,7 @@ export async function generateAssessmentPDF(
   
   for (let i = 0; i < priorities.length; i++) {
     const priority = priorities[i]
-    const priorityName = safeText((priority as any).domain?.name) || 'Priority Area'
+    const priorityName = safeText((priority.domain as any)?.label) || 'Priority Area'
     
     if (yPosition < 180) {
       result = addPage()
@@ -194,13 +194,12 @@ export async function generateAssessmentPDF(
     page.drawText(`Current Score: ${priority.score.toFixed(1)} - ${safeText(getScoreLabel(Math.round(priority.score)))}`, { x: margin + 15, y: yPosition - 56, size: 9, font: regularFont, color: getScoreColorRGB(priority.score) })
     
     const recommendations: Record<string, string> = {
-      'Foundations': 'Strengthen biblical integration and Christian worldview across all areas.',
-      'Leadership & Personnel': 'Develop leadership capacity and ensure qualified, aligned staff.',
-      'Teaching & Learning': 'Enhance instructional quality and student engagement strategies.',
-      'Spiritual Formation': 'Deepen spiritual practices and integrate faith across curriculum.',
-      'Student Services': 'Improve support systems and ensure comprehensive student care.',
-      'School Culture': 'Build positive relationships and strengthen community engagement.',
-      'School Improvement': 'Establish clear vision, strategic planning, and assessment systems.',
+      'Leadership & Management': 'Strengthen leadership capacity, accountability systems, and strategic decision-making processes.',
+      'Teaching & Learning': 'Enhance instructional quality, assessment practices, and differentiated learning approaches.',
+      'Governance & Policies': 'Develop clear governance structures, documented policies, and compliance frameworks.',
+      'Child Protection & Safeguarding': 'Implement robust child protection policies, training programs, and reporting mechanisms.',
+      'Financial Stewardship': 'Improve financial planning, transparency, and sustainable resource management.',
+      'Spiritual Formation': 'Deepen spiritual practices, biblical integration, and faith development across the school.',
     }
     
     const recommendation = recommendations[priorityName] || 'Focus on strengthening this area through targeted improvement initiatives.'
