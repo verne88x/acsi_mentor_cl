@@ -28,7 +28,7 @@ export async function detectRiskAlerts(): Promise<RiskAlert[]> {
   
   for (const school of schools) {
     // Get latest assessment
-    const { data: latestAssessment } = await supabase
+    const { data: latestAssessmentData } = await supabase
       .from('assessments')
       .select('*')
       .eq('school_id', school.id)
@@ -36,6 +36,8 @@ export async function detectRiskAlerts(): Promise<RiskAlert[]> {
       .order('assessment_date', { ascending: false })
       .limit(1)
       .single()
+    
+    const latestAssessment = latestAssessmentData as any
     
     // ALERT 1: No recent assessment (6+ months)
     if (!latestAssessment) {
@@ -89,7 +91,7 @@ export async function detectRiskAlerts(): Promise<RiskAlert[]> {
       }
       
       // ALERT 3: Declining overall score
-      const { data: previousAssessment } = await supabase
+      const { data: previousAssessmentData } = await supabase
         .from('assessments')
         .select('*')
         .eq('school_id', school.id)
@@ -98,6 +100,8 @@ export async function detectRiskAlerts(): Promise<RiskAlert[]> {
         .limit(1)
         .range(1, 1)
         .single()
+      
+      const previousAssessment = previousAssessmentData as any
       
       if (latestAssessment && previousAssessment) {
         const currentScore = latestAssessment.overall_score || 0
