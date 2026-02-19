@@ -83,7 +83,9 @@ export async function generateAssessmentPDF(
   yPosition = pageHeight - 200
   page.drawRectangle({ x: margin, y: yPosition - 80, width: contentWidth, height: 80, color: lightGray, borderColor: rgb(0.85, 0.87, 0.89), borderWidth: 1 })
   page.drawText(school.name, { x: margin + 20, y: yPosition - 30, size: 20, font: boldFont, color: textDark })
-  page.drawText(`${school.town || ''}, ${school.county || ''}`.trim().replace(/^,\s*/, ''), { x: margin + 20, y: yPosition - 50, size: 11, font: regularFont, color: textGray })
+  
+  const locationText = `${school.town || ''}, ${school.county || ''}`.trim().replace(/^,\s*/, '').replace(/,\s*$/, '') || 'Location not specified'
+  page.drawText(locationText, { x: margin + 20, y: yPosition - 50, size: 11, font: regularFont, color: textGray })
   
   yPosition -= 120
   yPosition = drawSectionHeader(page, yPosition, '1. Executive Summary')
