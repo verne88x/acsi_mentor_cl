@@ -36,13 +36,16 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
     setSaving(true)
 
     try {
+      // Get current logged in user
+      const { data: { user } } = await supabase.auth.getUser()
+
       // Create action plan
       const { data, error: planError } = await supabase
         .from('action_plans')
         .insert({
           school_id: school.id,
           assessment_id: assessment.id,
-          created_by: assessment.conducted_by,
+          created_by: user?.id || assessment.conducted_by || null,
           title: `Action Plan - ${new Date().toLocaleDateString()}`,
           description: `Generated from health check assessment`,
           status: 'active' as const,
