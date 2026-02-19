@@ -7,9 +7,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 interface GrowthDashboardProps {
   school: School
   assessments: Assessment[]
+  selfAssessments?: any[]
 }
 
-export default function GrowthDashboard({ school, assessments }: GrowthDashboardProps) {
+export default function GrowthDashboard({ school, assessments, selfAssessments = [] }: GrowthDashboardProps) {
   
   // Calculate domain scores for each assessment
   const assessmentData = assessments.map(assessment => {
@@ -342,7 +343,7 @@ export default function GrowthDashboard({ school, assessments }: GrowthDashboard
           Assessment History ({assessments.length} total)
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {assessments.slice().reverse().map((assessment, index) => (
+          {assessments.slice().reverse().map((assessment: any, index) => (
             <div 
               key={assessment.id}
               style={{
@@ -356,7 +357,7 @@ export default function GrowthDashboard({ school, assessments }: GrowthDashboard
               }}
             >
               <div>
-                <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
+                <div style={{ fontWeight: '500', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                   {new Date(assessment.assessment_date).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -364,7 +365,6 @@ export default function GrowthDashboard({ school, assessments }: GrowthDashboard
                   })}
                   {index === 0 && (
                     <span style={{ 
-                      marginLeft: '0.5rem',
                       padding: '0.125rem 0.5rem',
                       background: '#3b82f6',
                       color: 'white',
@@ -377,7 +377,7 @@ export default function GrowthDashboard({ school, assessments }: GrowthDashboard
                   )}
                 </div>
                 <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-                  ID: {assessment.id.slice(0, 8)}
+                  Mentor Assessment
                 </div>
               </div>
               <div style={{ 
@@ -391,6 +391,54 @@ export default function GrowthDashboard({ school, assessments }: GrowthDashboard
           ))}
         </div>
       </div>
+
+      {/* Self Assessments */}
+      {selfAssessments.length > 0 && (
+        <div>
+          <h2 style={{ 
+            fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', color: '#111827'
+          }}>
+            Self-Assessments by School Staff
+          </h2>
+          <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
+            These are not included in the growth trend – they show how school staff perceive their own performance.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {selfAssessments.map((assessment: any) => (
+              <div 
+                key={assessment.id}
+                style={{
+                  padding: '1rem',
+                  border: '1px solid #bfdbfe',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  background: '#eff6ff'
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
+                    {assessment.respondent_name} 
+                    <span style={{ color: '#6b7280', fontWeight: '400' }}> · {assessment.respondent_role}</span>
+                  </div>
+                  <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+                    {new Date(assessment.assessment_date).toLocaleDateString('en-US', {
+                      year: 'numeric', month: 'long', day: 'numeric'
+                    })}
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#3b82f6' }}>
+                    {(assessment.overall_score || 0).toFixed(1)}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Self-Assessment</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
     </div>
   )
