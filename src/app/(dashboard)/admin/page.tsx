@@ -16,13 +16,22 @@ export default async function AdminPage() {
   // Get ALL schools (not just assigned)
   const { data: schoolsData } = await supabase
     .from('schools')
-    .select(`
-      *,
-      mentor:profiles!mentor_id(full_name, email)
-    `)
+    .select('*')
     .order('name', { ascending: true })
   
   const schools = (schoolsData as any) || []
+  
+  // Get mentor info separately for schools that have one
+  for (const school of schools) {
+    if (school.mentor_id) {
+      const { data: mentor } = await supabase
+        .from('profiles')
+        .select('full_name, email')
+        .eq('id', school.mentor_id)
+        .single()
+      school.mentor = mentor
+    }
+  }
   
   // Get ALL alerts
   const alerts = await detectRiskAlerts()
