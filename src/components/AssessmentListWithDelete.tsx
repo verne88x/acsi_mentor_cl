@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { deleteAssessment } from '@/lib/actions/assessments'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 
 export default function AssessmentListWithDelete({ assessments, schoolId, isMentor }: any) {
+  const router = useRouter()
   const [deleting, setDeleting] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
-
+  
   const handleDelete = async (assessmentId: string, assessmentDate: string) => {
     if (!confirm(`Are you sure you want to delete the assessment from ${new Date(assessmentDate).toLocaleDateString()}? This action cannot be undone.`)) {
       return
@@ -15,14 +16,24 @@ export default function AssessmentListWithDelete({ assessments, schoolId, isMent
 
     setDeleting(assessmentId)
 
-    startTransition(async () => {
-      const result = await deleteAssessment(assessmentId, schoolId)
+    try {
+      const supabase = createClient()
       
-      if (result.error) {
-        alert(`Failed to delete: ${result.error}`)
-        setDeleting(null)
+      const { error } = await supabase
+        .from('assessments')
+        .delete()
+        .eq('id', assessmentId)
+      
+      if (error) {
+        throw error
       }
-    })
+      
+      // Refresh the page
+      router.refresh()
+    } catch (error: any) {
+      alert(`Failed to delete: ${error.message}`)
+      setDeleting(null)
+    }
   }
 
   return (
