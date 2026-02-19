@@ -21,6 +21,12 @@ const getScoreDescription = (score: number): string => {
   return 'Not Evident - Minimal or no implementation observed, immediate attention required.'
 }
 
+// Safe text helper
+const safeText = (text: any): string => {
+  if (text === null || text === undefined) return ''
+  return String(text)
+}
+
 export async function generateAssessmentPDF(
   assessment: Assessment,
   school: School,
@@ -47,12 +53,13 @@ export async function generateAssessmentPDF(
   
   const drawSectionHeader = (page: PDFPage, y: number, title: string) => {
     page.drawRectangle({ x: margin, y: y - 30, width: contentWidth, height: 30, color: lightGray })
-    page.drawText(title, { x: margin + 15, y: y - 20, size: 14, font: boldFont, color: textDark })
+    page.drawText(safeText(title), { x: margin + 15, y: y - 20, size: 14, font: boldFont, color: textDark })
     return y - 45
   }
   
   const wrapText = (text: string, maxWidth: number, fontSize: number) => {
-    const words = text.split(' ')
+    const safeString = safeText(text)
+    const words = safeString.split(' ')
     const lines: string[] = []
     let currentLine = ''
     for (const word of words) {
@@ -82,9 +89,12 @@ export async function generateAssessmentPDF(
   
   yPosition = pageHeight - 200
   page.drawRectangle({ x: margin, y: yPosition - 80, width: contentWidth, height: 80, color: lightGray, borderColor: rgb(0.85, 0.87, 0.89), borderWidth: 1 })
-  page.drawText(school.name, { x: margin + 20, y: yPosition - 30, size: 20, font: boldFont, color: textDark })
+  page.drawText(safeText(school.name) || 'School Name', { x: margin + 20, y: yPosition - 30, size: 20, font: boldFont, color: textDark })
   
-  const locationText = `${school.town || ''}, ${school.county || ''}`.trim().replace(/^,\s*/, '').replace(/,\s*$/, '') || 'Location not specified'
+  const town = safeText(school.town)
+  const county = safeText(school.county)
+  const locationParts = [town, county].filter(Boolean)
+  const locationText = locationParts.length > 0 ? locationParts.join(', ') : 'Location not specified'
   page.drawText(locationText, { x: margin + 20, y: yPosition - 50, size: 11, font: regularFont, color: textGray })
   
   yPosition -= 120
@@ -93,12 +103,12 @@ export async function generateAssessmentPDF(
   page.drawRectangle({ x: margin + 20, y: yPosition - 80, width: 150, height: 80, color: rgb(0.98, 0.98, 0.99), borderColor: getScoreColorRGB(overallScore), borderWidth: 3 })
   page.drawText('Overall Score', { x: margin + 45, y: yPosition - 25, size: 10, font: regularFont, color: textGray })
   page.drawText(overallScore.toFixed(1), { x: margin + 65, y: yPosition - 50, size: 32, font: boldFont, color: getScoreColorRGB(overallScore) })
-  page.drawText(getScoreLabel(Math.round(overallScore)), { x: margin + 35, y: yPosition - 70, size: 9, font: boldFont, color: getScoreColorRGB(overallScore) })
+  page.drawText(safeText(getScoreLabel(Math.round(overallScore))), { x: margin + 35, y: yPosition - 70, size: 9, font: boldFont, color: getScoreColorRGB(overallScore) })
   
   const summaryLines = wrapText(getScoreDescription(overallScore), contentWidth - 200, 10)
   let summaryY = yPosition - 25
   for (const line of summaryLines) {
-    page.drawText(line, { x: margin + 200, y: summaryY, size: 10, font: regularFont, color: textDark })
+    page.drawText(safeText(line), { x: margin + 200, y: summaryY, size: 10, font: regularFont, color: textDark })
     summaryY -= 14
   }
   
@@ -138,10 +148,12 @@ export async function generateAssessmentPDF(
     }
     
     const scoreColor = getScoreColorRGB(domain.score)
+    const domainName = safeText((domain.domain as any)?.name) || 'Standard'
+    
     page.drawRectangle({ x: margin, y: yPosition - 60, width: contentWidth, height: 60, color: rgb(0.99, 0.99, 1), borderColor: rgb(0.90, 0.91, 0.93), borderWidth: 1 })
-    page.drawText((domain.domain as any).name, { x: margin + 15, y: yPosition - 25, size: 12, font: boldFont, color: textDark })
+    page.drawText(domainName, { x: margin + 15, y: yPosition - 25, size: 12, font: boldFont, color: textDark })
     page.drawText(domain.score.toFixed(1), { x: pageWidth - margin - 80, y: yPosition - 30, size: 24, font: boldFont, color: scoreColor })
-    page.drawText(getScoreLabel(Math.round(domain.score)), { x: pageWidth - margin - 80, y: yPosition - 48, size: 8, font: regularFont, color: scoreColor })
+    page.drawText(safeText(getScoreLabel(Math.round(domain.score))), { x: pageWidth - margin - 80, y: yPosition - 48, size: 8, font: regularFont, color: scoreColor })
     
     const barWidth = 200
     const barHeight = 8
@@ -167,6 +179,7 @@ export async function generateAssessmentPDF(
   
   for (let i = 0; i < priorities.length; i++) {
     const priority = priorities[i]
+    const priorityName = safeText((priority.domain as any)?.name) || 'Priority Area'
     
     if (yPosition < 180) {
       result = addPage()
@@ -177,8 +190,8 @@ export async function generateAssessmentPDF(
     page.drawRectangle({ x: margin, y: yPosition - 100, width: contentWidth, height: 100, color: lightGray, borderColor: getScoreColorRGB(priority.score), borderWidth: 2 })
     
     page.drawText(`Priority ${i + 1}`, { x: margin + 15, y: yPosition - 20, size: 10, font: boldFont, color: primary })
-    page.drawText((priority.domain as any).name, { x: margin + 15, y: yPosition - 38, size: 13, font: boldFont, color: textDark })
-    page.drawText(`Current Score: ${priority.score.toFixed(1)} - ${getScoreLabel(Math.round(priority.score))}`, { x: margin + 15, y: yPosition - 56, size: 9, font: regularFont, color: getScoreColorRGB(priority.score) })
+    page.drawText(priorityName, { x: margin + 15, y: yPosition - 38, size: 13, font: boldFont, color: textDark })
+    page.drawText(`Current Score: ${priority.score.toFixed(1)} - ${safeText(getScoreLabel(Math.round(priority.score)))}`, { x: margin + 15, y: yPosition - 56, size: 9, font: regularFont, color: getScoreColorRGB(priority.score) })
     
     const recommendations: Record<string, string> = {
       'Foundations': 'Strengthen biblical integration and Christian worldview across all areas.',
@@ -190,10 +203,11 @@ export async function generateAssessmentPDF(
       'School Improvement': 'Establish clear vision, strategic planning, and assessment systems.',
     }
     
-    const recLines = wrapText(recommendations[(priority.domain as any).name] || 'Focus on strengthening this area.', contentWidth - 50, 9)
+    const recommendation = recommendations[priorityName] || 'Focus on strengthening this area through targeted improvement initiatives.'
+    const recLines = wrapText(recommendation, contentWidth - 50, 9)
     let recY = yPosition - 72
     for (const line of recLines) {
-      page.drawText(line, { x: margin + 15, y: recY, size: 9, font: regularFont, color: textDark })
+      page.drawText(safeText(line), { x: margin + 15, y: recY, size: 9, font: regularFont, color: textDark })
       recY -= 12
     }
     
@@ -276,7 +290,8 @@ export async function generateAssessmentPDF(
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = `${school.name.replace(/\s+/g, '_')}_PSI_Health_Check_${new Date().toISOString().split('T')[0]}.pdf`
+  const schoolNameSafe = safeText(school.name).replace(/\s+/g, '_') || 'School'
+  link.download = `${schoolNameSafe}_PSI_Health_Check_${new Date().toISOString().split('T')[0]}.pdf`
   link.click()
   URL.revokeObjectURL(url)
 }
