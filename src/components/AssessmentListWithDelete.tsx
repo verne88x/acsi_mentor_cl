@@ -53,17 +53,12 @@ export default function AssessmentListWithDelete({ assessments, schoolId, isMent
               display: 'flex',
               alignItems: 'center',
               gap: '1rem',
-              marginBottom: '0.75rem'
+              marginBottom: '0.75rem',
+              flexWrap: 'wrap'
             }}>
-              <div style={{
-                fontSize: '1.125rem',
-                fontWeight: '600',
-                color: '#111827'
-              }}>
+              <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>
                 {new Date(assessment.assessment_date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
+                  year: 'numeric', month: 'long', day: 'numeric'
                 })}
               </div>
               <div style={{
@@ -77,66 +72,84 @@ export default function AssessmentListWithDelete({ assessments, schoolId, isMent
               }}>
                 {assessment.status}
               </div>
+              {assessment.respondent_name && (
+                <div style={{
+                  padding: '0.25rem 0.75rem',
+                  background: '#eff6ff',
+                  color: '#3b82f6',
+                  borderRadius: '9999px',
+                  fontSize: '0.75rem',
+                  fontWeight: '600',
+                }}>
+                  Self-Assessment
+                </div>
+              )}
             </div>
 
-            <div style={{
-              fontSize: '0.875rem',
-              color: '#6b7280',
-              marginBottom: '0.5rem'
-            }}>
-              Conducted by: {assessment.conductor?.full_name || assessment.conductor?.email || 'Unknown'}
+            <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+              {assessment.respondent_name
+                ? `By: ${assessment.respondent_name} (${assessment.respondent_role})`
+                : `Conducted by: ${assessment.conductor?.full_name || assessment.conductor?.email || 'Unknown'}`
+              }
             </div>
 
             {assessment.overall_score && (
               <div style={{
-                fontSize: '0.875rem',
-                color: '#6b7280',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
+                fontSize: '0.875rem', color: '#6b7280',
+                display: 'flex', alignItems: 'center', gap: '0.5rem'
               }}>
                 <span>Overall Score:</span>
-                <span style={{
-                  fontWeight: '600',
-                  fontSize: '1rem',
-                  color: '#3b82f6'
-                }}>
+                <span style={{ fontWeight: '600', fontSize: '1rem', color: '#3b82f6' }}>
                   {assessment.overall_score.toFixed(1)}
                 </span>
               </div>
             )}
 
             {assessment.action_plans && assessment.action_plans.length > 0 && (
-              <div style={{
-                marginTop: '0.5rem',
-                fontSize: '0.875rem',
-                color: '#10b981'
-              }}>
+              <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#10b981' }}>
                 ✓ Action plan created
               </div>
             )}
           </div>
 
           <div style={{
-            display: 'flex',
-            gap: '0.5rem',
-            alignItems: 'center'
+            display: 'flex', flexDirection: 'column',
+            gap: '0.5rem', alignItems: 'stretch', minWidth: '140px'
           }}>
             {assessment.status === 'completed' && (
-              <Link
-                href={`/schools/${schoolId}/plans/new?assessment=${assessment.id}`}
-                style={{
-                  padding: '0.5rem 1rem',
-                  background: '#3b82f6',
-                  color: 'white',
-                  borderRadius: '6px',
-                  textDecoration: 'none',
-                  fontSize: '0.875rem',
-                  fontWeight: '500'
-                }}
-              >
-                View Details
-              </Link>
+              <>
+                <Link
+                  href={`/schools/${schoolId}/assessments/${assessment.id}`}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    background: '#3b82f6',
+                    color: 'white',
+                    borderRadius: '6px',
+                    textDecoration: 'none',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    textAlign: 'center'
+                  }}
+                >
+                  View Details
+                </Link>
+                <Link
+                  href={`/schools/${schoolId}/plans/new?assessment=${assessment.id}`}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    background: '#f0fdf4',
+                    color: '#16a34a',
+                    border: '1px solid #bbf7d0',
+                    borderRadius: '6px',
+                    textDecoration: 'none',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    textAlign: 'center'
+                  }}
+                >
+                  Action Plan
+                </Link>
+              </>
             )}
 
             {isMentor && (
@@ -145,14 +158,13 @@ export default function AssessmentListWithDelete({ assessments, schoolId, isMent
                 disabled={deleting === assessment.id}
                 style={{
                   padding: '0.5rem 1rem',
-                  background: deleting === assessment.id ? '#d1d5db' : '#ef4444',
-                  color: 'white',
+                  background: deleting === assessment.id ? '#d1d5db' : '#fee2e2',
+                  color: deleting === assessment.id ? '#9ca3af' : '#ef4444',
                   borderRadius: '6px',
-                  border: 'none',
+                  border: '1px solid #fecaca',
                   fontSize: '0.875rem',
                   fontWeight: '500',
                   cursor: deleting === assessment.id ? 'not-allowed' : 'pointer',
-                  opacity: deleting === assessment.id ? 0.6 : 1
                 }}
               >
                 {deleting === assessment.id ? 'Deleting...' : '🗑️ Delete'}
