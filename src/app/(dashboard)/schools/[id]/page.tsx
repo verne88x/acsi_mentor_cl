@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import ShareAssessmentButton from '@/components/ShareAssessmentButton'
 import styles from './school.module.css'
 
 export default async function SchoolDetailPage({
@@ -76,6 +77,9 @@ export default async function SchoolDetailPage({
             <span>→</span>
           </Link>
 
+          {/* Share Assessment Link */}
+          <ShareAssessmentButton schoolId={params.id} />
+
           <Link
             href={`/schools/${params.id}/growth`}
             className={styles.secondaryButton}
@@ -123,7 +127,10 @@ export default async function SchoolDetailPage({
                       {new Date(assessment.assessment_date).toLocaleDateString()}
                     </div>
                     <div className={styles.assessmentMeta}>
-                      by {assessment.conducted_by?.full_name || assessment.conducted_by?.email}
+                      {assessment.respondent_name
+                        ? `${assessment.respondent_name} (${assessment.respondent_role})`
+                        : `by ${assessment.conducted_by?.full_name || assessment.conducted_by?.email || 'Unknown'}`
+                      }
                     </div>
                   </div>
                   <div className={styles.assessmentScore}>
