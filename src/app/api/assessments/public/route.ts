@@ -10,29 +10,37 @@ export async function POST(request: Request) {
   const body = await request.json()
   const { school_id, assessment_link_id, respondent_name, respondent_role, responses, overall_score } = body
 
+  console.log('Public assessment submit:', { school_id, respondent_name, respondent_role })
+
   if (!school_id || !respondent_name || !respondent_role || !responses) {
+    console.log('Missing fields:', { school_id: !!school_id, respondent_name: !!respondent_name, respondent_role: !!respondent_role, responses: !!responses })
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
+  const insertData = {
+    school_id,
+    assessment_link_id: assessment_link_id || null,
+    respondent_name,
+    respondent_role,
+    responses,
+    overall_score,
+    status: 'completed',
+    assessment_date: new Date().toISOString().split('T')[0],
+  }
+
+  console.log('Inserting:', insertData)
+
   const { data, error } = await supabaseAdmin
     .from('assessments')
-    .insert({
-      school_id,
-      assessment_link_id,
-      respondent_name,
-      respondent_role,
-      responses,
-      overall_score,
-      status: 'completed',
-      assessment_date: new Date().toISOString().split('T')[0],
-      conducted_by: null, // no logged-in user
-    })
+    .insert(insertData)
     .select()
     .single()
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Supabase error:', error)
+    return NextResponse.json({ error: error.message, details: error }, { status: 500 })
   }
 
+  console.log('Success:', data)
   return NextResponse.json({ success: true, id: (data as any).id })
 }
