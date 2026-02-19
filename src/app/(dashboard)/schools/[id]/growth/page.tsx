@@ -23,15 +23,27 @@ export default async function GrowthPage({
 
   const school = schoolData as any
 
-  // Get all completed assessments for this school, ordered by date
-  const { data: assessmentsData, error: assessmentsError } = await supabase
+  // Get mentor assessments only (conducted_by is not null) for growth trend
+  const { data: assessmentsData } = await supabase
     .from('assessments')
     .select('*')
     .eq('school_id', params.id)
     .eq('status', 'completed')
+    .not('conducted_by', 'is', null)
     .order('assessment_date', { ascending: true })
 
+  // Get self assessments separately (respondent_name is not null)
+  const { data: selfAssessmentsData } = await supabase
+    .from('assessments')
+    .select('*')
+    .eq('school_id', params.id)
+    .eq('status', 'completed')
+    .not('respondent_name', 'is', null)
+    .order('assessment_date', { ascending: false })
+    .limit(10)
+
   const assessments = (assessmentsData as any) || []
+  const selfAssessments = (selfAssessmentsData as any) || []
 
   return (
     <div style={{ 
@@ -95,7 +107,7 @@ export default async function GrowthPage({
             </p>
           </div>
         ) : (
-          <GrowthDashboard school={school} assessments={assessments} />
+          <GrowthDashboard school={school} assessments={assessments} selfAssessments={selfAssessments} />
         )}
       </div>
     </div>
