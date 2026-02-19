@@ -119,7 +119,7 @@ export default function AssessmentListWithDelete({ assessments, schoolId, isMent
             {assessment.status === 'completed' && (
               <>
                 <Link
-                  href={`/schools/${schoolId}/assessments/${assessment.id}`}
+                  href={`/schools/${schoolId}/assessment/${assessment.id}/plan`}
                   style={{
                     padding: '0.5rem 1rem',
                     background: '#3b82f6',
