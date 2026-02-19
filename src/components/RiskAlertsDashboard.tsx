@@ -1,7 +1,43 @@
 'use client'
 
 import Link from 'next/link'
-import { RiskAlert, getSeverityColor, getSeverityBgColor, getAlertIcon } from '@/lib/config/riskAlerts'
+
+export interface RiskAlert {
+  id: string
+  school_id: string
+  school_name: string
+  type: 'no_recent_assessment' | 'low_standard' | 'declining_score' | 'no_action_plan'
+  severity: 'high' | 'medium' | 'low'
+  message: string
+  details?: any
+  created_at: Date
+}
+
+function getSeverityColor(severity: 'high' | 'medium' | 'low'): string {
+  switch (severity) {
+    case 'high': return '#ef4444'
+    case 'medium': return '#f59e0b'
+    case 'low': return '#eab308'
+  }
+}
+
+function getSeverityBgColor(severity: 'high' | 'medium' | 'low'): string {
+  switch (severity) {
+    case 'high': return '#fee2e2'
+    case 'medium': return '#fed7aa'
+    case 'low': return '#fef9c3'
+  }
+}
+
+function getAlertIcon(type: RiskAlert['type']): string {
+  switch (type) {
+    case 'no_recent_assessment': return '📅'
+    case 'low_standard': return '⚠️'
+    case 'declining_score': return '📉'
+    case 'no_action_plan': return '📋'
+    default: return '🔔'
+  }
+}
 
 interface RiskAlertsDashboardProps {
   alerts: RiskAlert[]
