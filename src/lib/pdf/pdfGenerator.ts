@@ -148,7 +148,7 @@ export async function generateAssessmentPDF(
     }
     
     const scoreColor = getScoreColorRGB(domain.score)
-    const domainName = safeText((domain.domain as any)?.name) || 'Standard'
+    const domainName = safeText((domain as any).domain?.name) || 'Standard'
     
     page.drawRectangle({ x: margin, y: yPosition - 60, width: contentWidth, height: 60, color: rgb(0.99, 0.99, 1), borderColor: rgb(0.90, 0.91, 0.93), borderWidth: 1 })
     page.drawText(domainName, { x: margin + 15, y: yPosition - 25, size: 12, font: boldFont, color: textDark })
@@ -179,7 +179,7 @@ export async function generateAssessmentPDF(
   
   for (let i = 0; i < priorities.length; i++) {
     const priority = priorities[i]
-    const priorityName = safeText((priority.domain as any)?.name) || 'Priority Area'
+    const priorityName = safeText((priority as any).domain?.name) || 'Priority Area'
     
     if (yPosition < 180) {
       result = addPage()
