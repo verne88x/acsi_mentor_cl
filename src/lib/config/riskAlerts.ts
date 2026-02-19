@@ -17,11 +17,11 @@ export async function detectRiskAlerts(): Promise<RiskAlert[]> {
   const alerts: RiskAlert[] = []
   
   // Get all schools
-  const { data: schools } = await supabase
+  const { data: schoolsData } = await supabase
     .from('schools')
     .select('*')
   
-  if (!schools) return alerts
+  const schools = (schoolsData as any) || []
   
   const sixMonthsAgo = new Date()
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
