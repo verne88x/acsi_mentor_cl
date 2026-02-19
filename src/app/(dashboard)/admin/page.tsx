@@ -1,87 +1,110 @@
-import { getCurrentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+import { getCurrentUser } from '@/lib/auth'
 import { createClient } from '@/lib/supabase/server'
-import Link from 'next/link'
-import styles from './admin.module.css'
+import { detectRiskAlerts } from '@/lib/config/riskAlerts'
+import AdminDashboard from '@/components/AdminDashboard'
 
-export default async function AdminDashboard() {
+export default async function AdminPage() {
   const user = await getCurrentUser()
-
+  
   if (!user || user.role !== 'acsi_admin') {
-    redirect('/login')
+    redirect('/mentor')
   }
 
   const supabase = await createClient()
-
-  // Get statistics
-  const [
-    { count: schoolsCount },
-    { count: usersCount },
-    { count: assessmentsCount },
-  ] = await Promise.all([
-    supabase.from('schools').select('*', { count: 'exact', head: true }),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }),
-    supabase.from('assessments').select('*', { count: 'exact', head: true }),
-  ])
+  
+  // Get ALL schools (not just assigned)
+  const { data: schoolsData } = await supabase
+    .from('schools')
+    .select(`
+      *,
+      mentor:profiles!mentor_id(full_name, email)
+    `)
+    .order('name', { ascending: true })
+  
+  const schools = (schoolsData as any) || []
+  
+  // Get ALL alerts
+  const alerts = await detectRiskAlerts()
+  
+  // Get ALL consultation requests
+  const { data: requestsData } = await supabase
+    .from('consulting_requests')
+    .select(`
+      *,
+      school:schools(name, town, county),
+      creator:profiles!created_by(full_name, email)
+    `)
+    .order('created_at', { ascending: false })
+  
+  const requests = (requestsData as any) || []
+  
+  // Calculate network stats
+  let totalScore = 0
+  let assessmentCount = 0
+  const countyStats: Record<string, { count: number, totalScore: number, assessmentCount: number }> = {}
+  
+  for (const school of schools) {
+    const county = school.county || 'Unknown'
+    
+    if (!countyStats[county]) {
+      countyStats[county] = { count: 0, totalScore: 0, assessmentCount: 0 }
+    }
+    countyStats[county].count++
+    
+    const { data: latestAssessment } = await supabase
+      .from('assessments')
+      .select('overall_score')
+      .eq('school_id', school.id)
+      .eq('status', 'completed')
+      .order('assessment_date', { ascending: false })
+      .limit(1)
+      .single()
+    
+    if (latestAssessment && (latestAssessment as any).overall_score) {
+      const score = (latestAssessment as any).overall_score
+      totalScore += score
+      assessmentCount++
+      countyStats[county].totalScore += score
+      countyStats[county].assessmentCount++
+    }
+  }
+  
+  const averageScore = assessmentCount > 0 ? totalScore / assessmentCount : 0
+  
+  // Get mentor assignments
+  const mentorStats: Record<string, { name: string, schoolCount: number }> = {}
+  
+  for (const school of schools) {
+    if (school.mentor) {
+      const mentorId = school.mentor_id
+      if (!mentorStats[mentorId]) {
+        mentorStats[mentorId] = {
+          name: school.mentor.full_name || school.mentor.email,
+          schoolCount: 0
+        }
+      }
+      mentorStats[mentorId].schoolCount++
+    }
+  }
+  
+  const stats = {
+    totalSchools: schools.length,
+    averageScore: averageScore.toFixed(1),
+    totalAlerts: alerts.length,
+    highAlerts: alerts.filter(a => a.severity === 'high').length,
+    pendingRequests: requests.filter((r: any) => r.status === 'pending').length,
+    schoolsWithAssessments: assessmentCount,
+    countyStats,
+    mentorStats
+  }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>Admin Dashboard</h1>
-        <p>Manage schools, users, and platform settings</p>
-      </div>
-
-      <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Total Schools</div>
-          <div className={styles.statValue}>{schoolsCount || 0}</div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Total Users</div>
-          <div className={styles.statValue}>{usersCount || 0}</div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Assessments Completed</div>
-          <div className={styles.statValue}>{assessmentsCount || 0}</div>
-        </div>
-      </div>
-
-      <div className={styles.quickActions}>
-        <h2>Quick Actions</h2>
-        <div className={styles.actionsGrid}>
-          <Link href="/admin/schools/new" className={styles.actionCard}>
-            <div className={styles.actionIcon}>🏫</div>
-            <div className={styles.actionTitle}>Add New School</div>
-            <div className={styles.actionDescription}>
-              Register a new school in the platform
-            </div>
-          </Link>
-
-          <Link href="/admin/users/invite" className={styles.actionCard}>
-            <div className={styles.actionIcon}>👤</div>
-            <div className={styles.actionTitle}>Invite User</div>
-            <div className={styles.actionDescription}>
-              Send invitation to mentor or school admin
-            </div>
-          </Link>
-
-          <Link href="/admin/schools" className={styles.actionCard}>
-            <div className={styles.actionIcon}>📋</div>
-            <div className={styles.actionTitle}>Manage Schools</div>
-            <div className={styles.actionDescription}>
-              View and edit school information
-            </div>
-          </Link>
-
-          <Link href="/admin/users" className={styles.actionCard}>
-            <div className={styles.actionIcon}>👥</div>
-            <div className={styles.actionTitle}>Manage Users</div>
-            <div className={styles.actionDescription}>
-              View users and assign roles
-            </div>
-          </Link>
-        </div>
-      </div>
-    </div>
+    <AdminDashboard 
+      schools={schools}
+      alerts={alerts}
+      requests={requests}
+      stats={stats}
+    />
   )
 }
