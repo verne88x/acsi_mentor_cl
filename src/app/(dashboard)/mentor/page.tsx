@@ -19,6 +19,29 @@ export default async function MentorDashboard() {
         <p>Schools you are mentoring</p>
       </div>
 
+      {/* Quick Actions */}
+      <div style={{ 
+        marginBottom: '2rem', 
+        display: 'flex', 
+        gap: '1rem',
+        flexWrap: 'wrap'
+      }}>
+        <Link
+          href="/consulting-requests"
+          style={{
+            padding: '0.75rem 1.5rem',
+            background: '#3b82f6',
+            color: 'white',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            fontWeight: '600',
+            fontSize: '0.875rem'
+          }}
+        >
+          View Consultation Requests
+        </Link>
+      </div>
+
       {schools.length === 0 ? (
         <div className={styles.emptyState}>
           <p>No schools assigned yet.</p>
