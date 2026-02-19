@@ -77,6 +77,13 @@ export default async function SchoolDetailPage({
           </Link>
 
           <Link
+            href={`/schools/${params.id}/growth`}
+            className={styles.secondaryButton}
+          >
+            📈 Growth Over Time
+          </Link>
+
+          <Link
             href={`/schools/${params.id}/consulting-request`}
             className={styles.secondaryButton}
           >
