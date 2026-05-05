@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { School, AssessmentResponses, DomainResponse } from '@/types'
 import { HEALTH_CHECK_DOMAINS, calculateOverallScore } from '@/lib/config/healthCheckConfig'
 import ScorePills from '@/components/ScorePills'
@@ -15,7 +14,6 @@ interface AssessmentFormProps {
 
 export default function AssessmentForm({ school, userId }: AssessmentFormProps) {
   const router = useRouter()
-  const supabase = createClient()
   const [currentDomainIndex, setCurrentDomainIndex] = useState(0)
   const [responses, setResponses] = useState<AssessmentResponses>({})
   const [saving, setSaving] = useState(false)
