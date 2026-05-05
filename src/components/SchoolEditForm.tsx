@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { School } from '@/types'
 
 interface SchoolEditFormProps {
@@ -11,7 +10,6 @@ interface SchoolEditFormProps {
 
 export default function SchoolEditForm({ school }: SchoolEditFormProps) {
   const router = useRouter()
-  const supabase = createClient()
   const [saving, setSaving] = useState(false)
 
   const [formData, setFormData] = useState({
