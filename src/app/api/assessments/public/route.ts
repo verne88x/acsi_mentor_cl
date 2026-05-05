@@ -1,46 +1,16 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import sql from '@/lib/db'
 
 export async function POST(request: Request) {
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
-
   const body = await request.json()
   const { school_id, assessment_link_id, respondent_name, respondent_role, responses, overall_score } = body
-
-  console.log('Public assessment submit:', { school_id, respondent_name, respondent_role })
-
-  if (!school_id || !respondent_name || !respondent_role || !responses) {
-    console.log('Missing fields:', { school_id: !!school_id, respondent_name: !!respondent_name, respondent_role: !!respondent_role, responses: !!responses })
+  if (!school_id || !respondent_name || !respondent_role || !responses)
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
-  }
-
-  const insertData = {
-    school_id,
-    assessment_link_id: assessment_link_id || null,
-    respondent_name,
-    respondent_role,
-    responses,
-    overall_score,
-    status: 'completed',
-    assessment_date: new Date().toISOString().split('T')[0],
-  }
-
-  console.log('Inserting:', insertData)
-
-  const { data, error } = await supabaseAdmin
-    .from('assessments')
-    .insert(insertData)
-    .select()
-    .single()
-
-  if (error) {
-    console.error('Supabase error:', error)
-    return NextResponse.json({ error: error.message, details: error }, { status: 500 })
-  }
-
-  console.log('Success:', data)
-  return NextResponse.json({ success: true, id: (data as any).id })
+  const cb = await sql`SELECT id FROM profiles LIMIT 1`
+  const rows = await sql`
+    INSERT INTO assessments (school_id, assessment_link_id, respondent_name, respondent_role, responses, overall_score, status, assessment_date, conducted_by)
+    VALUES (${school_id}, ${assessment_link_id||null}, ${respondent_name}, ${respondent_role}, ${JSON.stringify(responses)}, ${overall_score||null}, 'completed', CURRENT_DATE, ${cb[0].id})
+    RETURNING id
+  `
+  return NextResponse.json({ success: true, id: rows[0].id })
 }
