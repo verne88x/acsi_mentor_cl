@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { ConsultingRequestWithDetails } from '@/types'
 import { generateConsultingRequestPDF } from '@/lib/pdf/consultingRequestPdfGenerator'
 
@@ -20,7 +19,6 @@ const SCHOOL_TYPE_LABELS: Record<string, string> = {
 
 export default function ConsultingRequestDetail({ request }: ConsultingRequestDetailProps) {
   const router = useRouter()
-  const supabase = createClient()
   const [status, setStatus] = useState(request.status)
   const [mentorNotes, setMentorNotes] = useState(request.mentor_notes || '')
   const [updating, setUpdating] = useState(false)
