@@ -1,23 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { auth } from '@/auth'
+import sql from '@/lib/db'
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
-
-  const { error } = await supabaseAdmin
-    .from('assessments')
-    .delete()
-    .eq('id', params.id)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+  const session = await auth()
+  if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  await sql`DELETE FROM assessments WHERE id = ${params.id}`
   return NextResponse.json({ success: true })
 }
