@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { ActionPlan, ActionItem } from '@/types'
 import { generateActionPlanPDF } from '@/lib/pdf/actionPlanPdfGenerator'
 
@@ -16,7 +15,6 @@ interface ActionPlanViewProps {
 
 export default function ActionPlanView({ plan }: ActionPlanViewProps) {
   const router = useRouter()
-  const supabase = createClient()
   const [updating, setUpdating] = useState(false)
   const [exporting, setExporting] = useState(false)
 
