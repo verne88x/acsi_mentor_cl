@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { School, Timeline } from '@/types'
 
 interface ConsultingRequestFormProps {
@@ -20,7 +19,6 @@ const SCHOOL_TYPE_OPTIONS = [
 
 export default function ConsultingRequestForm({ school, userId }: ConsultingRequestFormProps) {
   const router = useRouter()
-  const supabase = createClient()
   const [submitting, setSubmitting] = useState(false)
 
   const [formData, setFormData] = useState({
