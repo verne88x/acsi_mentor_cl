@@ -10,6 +10,6 @@ export default async function ActionPlanPage({ params }: { params: { id: string;
   `
   if (!rows[0]) redirect(`/schools/${params.id}`)
   const r = rows[0] as any
-  const school = { id: r.school_id, name: r.school_name, county: r.county, town: r.town, address: r.address, phone: r.phone, email: r.school_email, head_teacher: r.head_teacher, student_count: r.student_count, staff_count: r.staff_count }
+  const school = { id: r.school_id, name: r.school_name, county: r.county, town: r.town, address: r.address, phone: r.phone, email: r.school_email, head_teacher: r.head_teacher, student_count: r.student_count, staff_count: r.staff_count, created_at: r.created_at, updated_at: r.updated_at }
   return <ActionPlanGenerator assessment={{ ...r, school }} school={school} />
 }
