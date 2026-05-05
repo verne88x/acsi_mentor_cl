@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { Assessment, School } from '@/types'
 import { HEALTH_CHECK_DOMAINS, getScoreColor, getScoreLabel } from '@/lib/config/healthCheckConfig'
 import { generateSuggestedActions } from '@/lib/config/planTemplates'
@@ -16,7 +15,6 @@ interface ActionPlanGeneratorProps {
 
 export default function ActionPlanGenerator({ assessment, school }: ActionPlanGeneratorProps) {
   const router = useRouter()
-  const supabase = createClient()
   const [saving, setSaving] = useState(false)
   const [exporting, setExporting] = useState(false)
 
