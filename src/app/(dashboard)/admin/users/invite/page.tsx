@@ -1,195 +1,57 @@
 'use client'
-
 import { useState, FormEvent } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function InviteUserPage() {
   const router = useRouter()
-  const supabase = createClient()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
-  const [createdEmail, setCreatedEmail] = useState('')
-  const [createdPassword, setCreatedPassword] = useState('')
-
-  const [form, setForm] = useState({
-    email: '',
-    full_name: '',
-    role: 'mentor',
-    password: '',
-  })
-
-  const update = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
-  }
+  const [form, setForm] = useState({ email: '', full_name: '', role: 'mentor', password: '' })
+  const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }))
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    setError(null)
-    setSaving(true)
-
+    e.preventDefault(); setError(null); setSaving(true)
     try {
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email: form.email,
-        password: form.password,
-        options: {
-          data: {
-            full_name: form.full_name,
-            role: form.role,
-          }
-        }
-      })
-
-      if (signUpError) throw signUpError
-
-      setCreatedEmail(form.email)
-      setCreatedPassword(form.password)
+      const res = await fetch('/api/admin/users/create', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(form) })
+      if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Failed') }
       setSuccess(true)
-      setTimeout(() => router.push('/admin/users'), 5000)
-    } catch (err: any) {
-      setError(err.message || 'Failed to create user')
-    } finally {
-      setSaving(false)
-    }
+      setTimeout(() => router.push('/admin/users'), 3000)
+    } catch (err: any) { setError(err.message) } finally { setSaving(false) }
   }
 
-  const inputStyle = {
-    padding: '0.75rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '8px',
-    fontSize: '1rem',
-    width: '100%',
-    fontFamily: 'inherit',
-    boxSizing: 'border-box' as const,
-  }
+  const inputStyle = { padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '1rem', width: '100%', boxSizing: 'border-box' as const }
 
-  if (success) {
-    return (
-      <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-        <div style={{ background: 'white', borderRadius: '12px', padding: '3rem 2rem', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1f2937', margin: '0 0 1rem 0' }}>User Created!</h2>
-          <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
-            <p style={{ margin: '0 0 0.5rem 0', color: '#166534', fontSize: '0.875rem' }}><strong>Email:</strong> {createdEmail}</p>
-            <p style={{ margin: 0, color: '#166534', fontSize: '0.875rem' }}><strong>Password:</strong> {createdPassword}</p>
-          </div>
-          <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '0.5rem' }}>⚠️ Share these credentials with the user!</p>
-          <p style={{ color: '#9ca3af', fontSize: '0.75rem' }}>Redirecting in 5 seconds...</p>
-        </div>
-      </div>
-    )
-  }
+  if (success) return (
+    <div style={{padding: '2rem', maxWidth: '600px', margin: '0 auto', textAlign: 'center'}}>
+      <div style={{fontSize: '3rem'}}>✅</div>
+      <h2>User Created!</h2>
+      <p>Email: {form.email} / Password: {form.password}</p>
+      <p style={{color: '#9ca3af'}}>Redirecting...</p>
+    </div>
+  )
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-      <Link href="/admin/users" style={{ color: '#667eea', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>
-        ← Back to Users
-      </Link>
-
-      <div style={{ background: 'white', borderRadius: '12px', padding: '2rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginTop: '1rem' }}>
-        <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#1f2937', margin: '0 0 0.5rem 0' }}>
-          Invite New User
-        </h1>
-        <p style={{ color: '#6b7280', margin: '0 0 2rem 0' }}>
-          Create a new mentor or school admin account
-        </p>
-
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.5rem' }}>
-              Full Name *
-            </label>
-            <input
-              type="text"
-              value={form.full_name}
-              onChange={e => update('full_name', e.target.value)}
-              placeholder="e.g. John Kamau"
-              required
-              style={inputStyle}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.5rem' }}>
-              Email Address *
-            </label>
-            <input
-              type="email"
-              value={form.email}
-              onChange={e => update('email', e.target.value)}
-              placeholder="john@example.com"
-              required
-              style={inputStyle}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.5rem' }}>
-              Temporary Password *
-            </label>
-            <input
-              type="password"
-              value={form.password}
-              onChange={e => update('password', e.target.value)}
-              placeholder="Min. 6 characters"
-              required
-              minLength={6}
-              style={inputStyle}
-            />
-            <p style={{ fontSize: '0.75rem', color: '#9ca3af', margin: '0.25rem 0 0 0' }}>
-              Share this password with the user
-            </p>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.5rem' }}>
-              Role *
-            </label>
-            <select
-              value={form.role}
-              onChange={e => update('role', e.target.value)}
-              style={{ ...inputStyle, cursor: 'pointer' }}
-            >
+    <div style={{padding: '2rem', maxWidth: '600px', margin: '0 auto'}}>
+      <Link href="/admin/users" style={{color: '#667eea', textDecoration: 'none'}}>← Back to Users</Link>
+      <div style={{background: 'white', borderRadius: '12px', padding: '2rem', marginTop: '1rem'}}>
+        <h1 style={{fontSize: '1.875rem', fontWeight: 700, marginBottom: '1.5rem'}}>Invite New User</h1>
+        <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+          <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500}}>Full Name *</label><input type="text" value={form.full_name} onChange={e => update('full_name', e.target.value)} required style={inputStyle} /></div>
+          <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500}}>Email *</label><input type="email" value={form.email} onChange={e => update('email', e.target.value)} required style={inputStyle} /></div>
+          <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500}}>Password *</label><input type="password" value={form.password} onChange={e => update('password', e.target.value)} required minLength={6} style={inputStyle} /></div>
+          <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500}}>Role *</label>
+            <select value={form.role} onChange={e => update('role', e.target.value)} style={{...inputStyle, cursor: 'pointer'}}>
               <option value="mentor">Mentor</option>
               <option value="school_admin">School Admin</option>
               <option value="acsi_admin">ACSI Admin</option>
             </select>
-            <p style={{ fontSize: '0.75rem', color: '#f59e0b', margin: '0.25rem 0 0 0' }}>
-              ⚠️ After creating, go to Users list and set the role manually if needed
-            </p>
           </div>
-
-          {error && (
-            <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '0.75rem', borderRadius: '8px', fontSize: '0.875rem' }}>
-              {error}
-            </div>
-          )}
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
-            <Link
-              href="/admin/users"
-              style={{ padding: '0.75rem 1.5rem', background: 'white', color: '#374151', border: '1px solid #d1d5db', borderRadius: '8px', textDecoration: 'none', fontWeight: 500 }}
-            >
-              Cancel
-            </Link>
-            <button
-              type="submit"
-              disabled={saving || !form.email || !form.password}
-              style={{
-                padding: '0.75rem 2rem',
-                background: saving || !form.email || !form.password ? '#d1d5db' : '#667eea',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                fontWeight: 600,
-                cursor: saving || !form.email || !form.password ? 'not-allowed' : 'pointer',
-              }}
-            >
-              {saving ? 'Creating...' : 'Create User'}
-            </button>
+          {error && <div style={{background: '#fef2f2', color: '#dc2626', padding: '0.75rem', borderRadius: '8px'}}>{error}</div>}
+          <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
+            <Link href="/admin/users" style={{padding: '0.75rem 1.5rem', border: '1px solid #d1d5db', borderRadius: '8px', textDecoration: 'none', color: '#374151'}}>Cancel</Link>
+            <button type="submit" disabled={saving} style={{padding: '0.75rem 2rem', background: saving ? '#d1d5db' : '#667eea', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer'}}>{saving ? 'Creating...' : 'Create User'}</button>
           </div>
         </form>
       </div>
