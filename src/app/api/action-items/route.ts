@@ -1,0 +1,14 @@
+import { NextResponse } from 'next/server'
+import { auth } from '@/auth'
+import sql from '@/lib/db'
+
+export async function POST(request: Request) {
+  const session = await auth()
+  if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const items = await request.json()
+  if (Array.isArray(items) && items.length > 0) {
+    const values = items.map((item: any) => sql`(${item.plan_id}, ${item.domain}, ${item.description}, ${item.owner_name||null}, ${item.kpi||null}, ${item.priority||null}, ${item.status||'pending'}, ${item.due_date||null})`)
+    await sql`INSERT INTO action_items (plan_id, domain, description, owner_name, kpi, priority, status, due_date) VALUES ${sql.join(values)}`
+  }
+  return NextResponse.json({ success: true })
+}
