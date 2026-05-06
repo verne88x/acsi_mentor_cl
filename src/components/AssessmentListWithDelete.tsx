@@ -100,7 +100,7 @@ export default function AssessmentListWithDelete({ assessments, schoolId, isMent
               }}>
                 <span>Overall Score:</span>
                 <span style={{ fontWeight: '600', fontSize: '1rem', color: '#3b82f6' }}>
-                  {assessment.overall_score.toFixed(1)}
+                  {parseFloat(assessment.overall_score).toFixed(1)}
                 </span>
               </div>
             )}
