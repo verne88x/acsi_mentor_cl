@@ -1,12 +1,11 @@
 'use client'
-import { Profile } from '@/types'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import styles from './Navigation.module.css'
 
-interface NavigationProps { user: Profile }
+interface NavigationProps { user: any }
 
 export default function Navigation({ user }: NavigationProps) {
   const pathname = usePathname()
@@ -33,7 +32,7 @@ export default function Navigation({ user }: NavigationProps) {
           <Link href={user.role === 'mentor' ? '/mentor' : user.role === 'school_admin' ? '/school-admin' : '/admin'}>ACSI School Mentor</Link>
         </div>
         <div className={styles.navItems}>
-          {getNavItems().map((item) => (
+          {getNavItems().map(item => (
             <Link key={item.href} href={item.href} className={pathname === item.href ? styles.navItemActive : styles.navItem}>{item.label}</Link>
           ))}
         </div>
