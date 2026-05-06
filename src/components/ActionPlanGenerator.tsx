@@ -35,22 +35,10 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
 
     try {
       // Get current logged in user
-      const { data: { user } } = await supabase.auth.getUser()
-
       // Create action plan
-      const { data, error: planError } = await supabase
-        .from('action_plans')
-        .insert({
-          school_id: school.id,
-          assessment_id: assessment.id,
-          created_by: user?.id || assessment.conducted_by || null,
-          title: `Action Plan - ${new Date().toLocaleDateString()}`,
-          description: `Generated from health check assessment`,
-          status: 'active' as const,
-          start_date: new Date().toISOString().split('T')[0],
-        } as any)
-        .select()
-        .single()
+      const _pr = await fetch('/api/action-plans', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ school_id: school.id, assessment_id: assessment.id, title: `Action Plan - ${new Date().toLocaleDateString()}`, status: 'active' }) })
+      const data = await _pr.json()
+      const planError = _pr.ok ? null : data.error
 
       if (planError) throw planError
       
@@ -67,9 +55,8 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
         status: 'pending' as const,
       }))
 
-      const { error: itemsError } = await supabase
-        .from('action_items')
-        .insert(items as any)
+      const _ir = await fetch('/api/action-items', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(items) })
+      const itemsError = _ir.ok ? null : 'Failed'
 
       if (itemsError) throw itemsError
 
