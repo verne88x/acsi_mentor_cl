@@ -187,7 +187,7 @@ export default function AssessmentCompare({ assessments, schoolId }: AssessmentC
                     fontSize: '1.125rem', color: '#1e40af',
                     borderTop: '2px solid #bfdbfe'
                   }}>
-                    {a.overall_score?.toFixed(1) || '–'}
+                    {a.overall_score ? parseFloat(a.overall_score).toFixed(1) : '–'}
                   </td>
                 ))}
               </tr>
