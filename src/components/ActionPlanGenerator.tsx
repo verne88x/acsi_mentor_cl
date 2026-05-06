@@ -18,9 +18,12 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
   const [saving, setSaving] = useState(false)
   const [exporting, setExporting] = useState(false)
 
+  // Parse responses if string
+  const parsedResponses = typeof assessment.responses === 'string' ? JSON.parse(assessment.responses) : (assessment.responses || {})
+
   // Calculate domain scores
   const domainScores = HEALTH_CHECK_DOMAINS.map((domain) => {
-    const response = assessment.responses[domain.code]
+    const response = parsedResponses[domain.code]
     return {
       domain,
       score: response?.score || 0,
