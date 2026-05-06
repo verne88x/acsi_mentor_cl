@@ -31,7 +31,7 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
   }).sort((a, b) => a.score - b.score)
 
   const priorityDomains = domainScores.filter((d) => d.score < 4)
-  const suggestedActions = generateSuggestedActions(assessment.responses)
+  const suggestedActions = generateSuggestedActions(parsedResponses)
 
   const handleSavePlan = async () => {
     setSaving(true)
