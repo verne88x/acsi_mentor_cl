@@ -26,11 +26,11 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.inputGroup}>
             <label htmlFor="email">Email</label>
-            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
+            <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="email" />
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="password">Password</label>
-            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
+            <input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required autoComplete="current-password" />
           </div>
           {error && <div className={styles.error}>{error}</div>}
           <button type="submit" className={styles.submitButton} disabled={loading}>{loading ? 'Signing in...' : 'Sign In'}</button>
