@@ -1,10 +1,13 @@
-import { NextResponse } from 'next/server'
-import { auth } from '@/auth'
-import sql from '@/lib/db'
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/auth"
+import sql from "@/lib/db"
+import { NextResponse } from "next/server"
+
+export const dynamic = "force-dynamic"
 
 export async function GET() {
-  const session = await auth()
-  if (!session?.user || (session.user as any).role !== 'acsi_admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const session = await getServerSession(authOptions)
+  if (!session?.user || (session.user as any).role !== "acsi_admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   const users = await sql`SELECT id, email, full_name, role, created_at FROM profiles ORDER BY created_at DESC`
   return NextResponse.json(users)
 }
