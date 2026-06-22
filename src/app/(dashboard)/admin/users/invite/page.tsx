@@ -45,6 +45,7 @@ export default function InviteUserPage() {
             <select value={form.role} onChange={e => update('role', e.target.value)} style={{...inputStyle, cursor: 'pointer'}}>
               <option value="mentor">Mentor</option>
               <option value="school_admin">School Admin</option>
+              <option value="regional_manager">Regional Manager</option>
               <option value="acsi_admin">ACSI Admin</option>
             </select>
           </div>
