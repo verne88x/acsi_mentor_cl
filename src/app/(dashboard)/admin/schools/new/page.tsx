@@ -7,7 +7,7 @@ export default function NewSchoolPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [form, setForm] = useState({ name: '', county: '', town: '', address: '', phone: '', email: '', head_teacher: '', student_count: '', staff_count: '' })
+  const [form, setForm] = useState({ name: '', county: '', town: '', address: '', phone: '', email: '', head_teacher: '', student_count: '', staff_count: '', region: '' })
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }))
   const inputStyle = { padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '1rem', width: '100%', boxSizing: 'border-box' as const }
 
