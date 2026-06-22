@@ -158,6 +158,7 @@ export default function AdminDashboard({ schools, alerts, requests, stats }: any
                         <div style={{fontSize:'0.75rem',color:'#6b7280'}}>Last Visit</div>
                       </div>
                     </div>
+                    <Link href={`/schools`} style={{display:'block',textAlign:'center',marginTop:'0.75rem',fontSize:'0.8rem',color:'#667eea',textDecoration:'none'}}>View schools →</Link>
                   </div>
                 ))}
               </div>
@@ -168,7 +169,7 @@ export default function AdminDashboard({ schools, alerts, requests, stats }: any
                   <div key={v.id} style={{background:'white',borderRadius:'10px',padding:'1rem 1.25rem',border:'1px solid #e5e7eb',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
                     <div style={{flex:1}}>
                       <div style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'0.375rem'}}>
-                        <span style={{fontWeight:600}}>{v.school_name}</span>
+                        <Link href={`/schools/${v.school_id}/visits`} style={{fontWeight:600,color:'#1f2937',textDecoration:'none'}}>{v.school_name}</Link>
                         <span style={{fontSize:'0.75rem',background:'#f3f4f6',color:'#6b7280',padding:'0.125rem 0.5rem',borderRadius:'9999px'}}>{v.note_type?.replace('_',' ')}</span>
                       </div>
                       <p style={{margin:'0 0 0.375rem 0',color:'#4b5563',fontSize:'0.875rem'}}>{v.content?.length > 150 ? v.content.substring(0,150)+'...' : v.content}</p>
