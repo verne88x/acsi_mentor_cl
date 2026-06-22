@@ -128,7 +128,8 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
         y -= 32
 
         // Content - word wrap
-        const words = note.content.split(" ")
+        const safeContent = safeText(note.content)
+        const words = safeContent.split(" ")
         let line = ""
         for (const word of words) {
           const test = line ? `${line} ${word}` : word
