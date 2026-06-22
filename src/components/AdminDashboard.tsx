@@ -120,7 +120,7 @@ export default function AdminDashboard({ schools, alerts, requests, stats }: any
           {requests.map((req: any) => (
             <Link key={req.id} href={`/consulting-requests/${req.id}`} style={{ padding: '1.25rem', border: '1px solid #e5e7eb', borderRadius: '8px', textDecoration: 'none', color: 'inherit', background: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{req.school.name}</div>
+                <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{req.school_name}</div>
                 <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>{new Date(req.created_at).toLocaleDateString()} • {req.status}</div>
               </div>
               <span>→</span>
