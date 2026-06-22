@@ -158,7 +158,7 @@ export default function AdminDashboard({ schools, alerts, requests, stats }: any
                         <div style={{fontSize:'0.75rem',color:'#6b7280'}}>Last Visit</div>
                       </div>
                     </div>
-                    <Link href={`/schools`} style={{display:'block',textAlign:'center',marginTop:'0.75rem',fontSize:'0.8rem',color:'#667eea',textDecoration:'none'}}>View schools →</Link>
+                    <Link href={`/admin/schools`} style={{display:'block',textAlign:'center',marginTop:'0.75rem',fontSize:'0.8rem',color:'#667eea',textDecoration:'none'}}>View schools →</Link>
                   </div>
                 ))}
               </div>
@@ -186,14 +186,31 @@ export default function AdminDashboard({ schools, alerts, requests, stats }: any
 
       {activeTab === 'mentors' && (
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>Mentor Assignments</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
-            {Object.entries(stats.mentorStats).map(([id, data]: any) => (
-              <div key={id} style={{ padding: '1.5rem', border: '1px solid #e5e7eb', borderRadius: '8px', background: 'white' }}>
-                <div style={{ fontWeight: '600', marginBottom: '0.5rem', fontSize: '1.0625rem' }}>{data.name}</div>
-                <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>{data.schoolCount} schools assigned</div>
-              </div>
-            ))}
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.5rem'}}>
+            <h2 style={{fontSize:'1.25rem',fontWeight:700,margin:0}}>Mentor Assignments</h2>
+            <a href="/admin/users/invite" style={{padding:'0.625rem 1.25rem',background:'#667eea',color:'white',borderRadius:'8px',textDecoration:'none',fontWeight:600,fontSize:'0.875rem'}}>+ Add Mentor</a>
+          </div>
+          {schools.filter((s: any) => true).length === 0 ? (
+            <p style={{color:'#9ca3af'}}>No schools yet. <a href="/admin/schools/new" style={{color:'#667eea'}}>Add a school first.</a></p>
+          ) : (
+            <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+              {schools.map((school: any) => (
+                <div key={school.id} style={{background:'white',borderRadius:'12px',padding:'1.25rem',border:'1px solid #e5e7eb'}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:'1rem'}}>{school.name}</div>
+                      <div style={{fontSize:'0.875rem',color:'#6b7280'}}>{school.region || '—'} · {school.town}, {school.county}</div>
+                    </div>
+                    <Link href={`/admin/schools/${school.id}/mentors`} style={{padding:'0.5rem 1rem',background:'#f3f4f6',color:'#374151',borderRadius:'8px',textDecoration:'none',fontSize:'0.875rem',fontWeight:500}}>
+                      Manage Mentors
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
           </div>
         </div>
       )}
