@@ -72,6 +72,16 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
     setNotes(prev => prev.filter(n => n.id !== noteId))
   }
 
+  function safeText(text: string): string {
+    return text
+      .replace(/\u2018|\u2019/g, "'")
+      .replace(/\u201C|\u201D/g, '"')
+      .replace(/\u2013/g, '-')
+      .replace(/\u2014/g, '--')
+      .replace(/\u2026/g, '...')
+      .replace(/[^\x00-\x7F]/g, '?')
+  }
+
   async function handleExportPDF() {
     setExporting(true)
     try {
@@ -94,7 +104,7 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
       y -= 20
       page.drawText("Visit Log Report", { x: margin, y, font: boldFont, size: 18, color: rgb(0.1, 0.1, 0.1) })
       y -= 20
-      page.drawText(school.name, { x: margin, y, font, size: 13, color: rgb(0.4, 0.4, 0.4) })
+      page.drawText(safeText(school.name), { x: margin, y, font, size: 13, color: rgb(0.4, 0.4, 0.4) })
       y -= 10
       page.drawText(`Generated: ${new Date().toLocaleDateString()}  ·  Total visits: ${notes.length}`, { x: margin, y, font, size: 10, color: rgb(0.6, 0.6, 0.6) })
       y -= 15
@@ -113,8 +123,8 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
 
         // Note header
         page.drawRectangle({ x: margin, y: y - 22, width, height: 26, color: rgb(0.97, 0.97, 1) })
-        page.drawText(`${dateStr}  ·  ${typeLabel}`, { x: margin + 8, y: y - 14, font: boldFont, size: 11, color: rgb(0.1, 0.1, 0.4) })
-        page.drawText(`by ${note.mentor_name}`, { x: 595 - margin - 100, y: y - 14, font, size: 9, color: rgb(0.5, 0.5, 0.5) })
+        page.drawText(safeText(`${dateStr}  ·  ${typeLabel}`), { x: margin + 8, y: y - 14, font: boldFont, size: 11, color: rgb(0.1, 0.1, 0.4) })
+        page.drawText(safeText(`by ${note.mentor_name}`), { x: 595 - margin - 100, y: y - 14, font, size: 9, color: rgb(0.5, 0.5, 0.5) })
         y -= 32
 
         // Content - word wrap
@@ -125,7 +135,7 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
           const testWidth = font.widthOfTextAtSize(test, 10)
           if (testWidth > width - 16 && line) {
             if (y < 80) { const next = addPage(); page = next.page; y = next.y }
-            page.drawText(line, { x: margin + 8, y, font, size: 10, color: rgb(0.2, 0.2, 0.2) })
+            page.drawText(safeText(line), { x: margin + 8, y, font, size: 10, color: rgb(0.2, 0.2, 0.2) })
             y -= 15
             line = word
           } else {
@@ -134,7 +144,7 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
         }
         if (line) {
           if (y < 80) { const next = addPage(); page = next.page; y = next.y }
-          page.drawText(line, { x: margin + 8, y, font, size: 10, color: rgb(0.2, 0.2, 0.2) })
+          page.drawText(safeText(line), { x: margin + 8, y, font, size: 10, color: rgb(0.2, 0.2, 0.2) })
           y -= 15
         }
 
