@@ -54,7 +54,7 @@ export default function AdminUsersPage() {
           <tbody>
             {users.map((user) => (
               <tr key={user.id} style={{borderTop:'1px solid #f3f4f6'}}>
-                <td style={{padding:'1rem 1.5rem',fontWeight:500}}>{user.full_name || '—'}</td>
+                <td style={{padding:'1rem 1.5rem',fontWeight:500}}>{['regional_manager','mentor'].includes(user.role) ? <a href={`/admin/managers/${user.id}`} style={{color:'#667eea',textDecoration:'none',fontWeight:600}}>{user.full_name || '—'}</a> : (user.full_name || '—')}</td>
                 <td style={{padding:'1rem 1.5rem',color:'#6b7280'}}>{user.email}</td>
                 <td style={{padding:'1rem 1.5rem'}}>
                   <span style={{padding:'0.25rem 0.75rem',borderRadius:'999px',fontSize:'0.75rem',fontWeight:600,...getRoleColor(user.role)}}>{user.role}</span>
