@@ -152,7 +152,7 @@ export async function generateAssessmentPDF(
     
     page.drawRectangle({ x: margin, y: yPosition - 60, width: contentWidth, height: 60, color: rgb(0.99, 0.99, 1), borderColor: rgb(0.90, 0.91, 0.93), borderWidth: 1 })
     page.drawText(domainName, { x: margin + 15, y: yPosition - 25, size: 12, font: boldFont, color: textDark })
-    page.drawText(domain.parseFloat(String(score)).toFixed(1), { x: pageWidth - margin - 80, y: yPosition - 30, size: 24, font: boldFont, color: scoreColor })
+    page.drawText(parseFloat(String(domain.score)).toFixed(1), { x: pageWidth - margin - 80, y: yPosition - 30, size: 24, font: boldFont, color: scoreColor })
     page.drawText(safeText(getScoreLabel(Math.round(domain.score))), { x: pageWidth - margin - 80, y: yPosition - 48, size: 8, font: regularFont, color: scoreColor })
     
     const barWidth = 200
@@ -191,7 +191,7 @@ export async function generateAssessmentPDF(
     
     page.drawText(`Priority ${i + 1}`, { x: margin + 15, y: yPosition - 20, size: 10, font: boldFont, color: primary })
     page.drawText(priorityName, { x: margin + 15, y: yPosition - 38, size: 13, font: boldFont, color: textDark })
-    page.drawText(`Current Score: ${priority.parseFloat(String(score)).toFixed(1)} - ${safeText(getScoreLabel(Math.round(priority.score)))}`, { x: margin + 15, y: yPosition - 56, size: 9, font: regularFont, color: getScoreColorRGB(priority.score) })
+    page.drawText(`Current Score: ${parseFloat(String(priority.score)).toFixed(1)} - ${safeText(getScoreLabel(Math.round(priority.score)))}`, { x: margin + 15, y: yPosition - 56, size: 9, font: regularFont, color: getScoreColorRGB(priority.score) })
     
     const recommendations: Record<string, string> = {
       'Leadership & Management': 'Strengthen leadership capacity, accountability systems, and strategic decision-making processes.',
