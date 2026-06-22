@@ -26,6 +26,7 @@ export async function getUserSchools() {
 export function getRoleBasedRedirect(role: string): string {
   switch (role) {
     case "mentor": return "/mentor"
+    case "regional_manager": return "/mentor"
     case "school_admin": return "/school-admin"
     case "acsi_admin": return "/admin"
     default: return "/login"
