@@ -6,7 +6,7 @@ import Link from 'next/link'
 export default async function AdminSchoolsPage() {
   const user = await getCurrentUser()
   if (!user || user.role !== 'acsi_admin') redirect('/login')
-  const schools = await sql`SELECT * FROM schools ORDER BY name`
+  const schools = await sql`SELECT * FROM schools ORDER BY region NULLS LAST, name`
   return (
     <div style={{padding: '2rem', maxWidth: '1400px', margin: '0 auto'}}>
       <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '2rem'}}>
@@ -17,13 +17,15 @@ export default async function AdminSchoolsPage() {
         <table style={{width: '100%', borderCollapse: 'collapse'}}>
           <thead style={{background: '#f9fafb'}}><tr>
             <th style={{padding: '1rem 1.5rem', textAlign: 'left'}}>School Name</th>
-            <th style={{padding: '1rem 1.5rem', textAlign: 'left'}}>Location</th>
+            <th style={{padding: '1rem 1.5rem', textAlign: 'left'}}>Region</th>
+              <th style={{padding: '1rem 1.5rem', textAlign: 'left'}}>Location</th>
             <th style={{padding: '1rem 1.5rem', textAlign: 'left'}}>Actions</th>
           </tr></thead>
           <tbody>
             {schools.map((school: any) => (
               <tr key={school.id} style={{borderTop: '1px solid #f3f4f6'}}>
                 <td style={{padding: '1rem 1.5rem', fontWeight: 500}}>{school.name}</td>
+                <td style={{padding: '1rem 1.5rem', color: '#6b7280'}}>{school.region || '—'}</td>
                 <td style={{padding: '1rem 1.5rem', color: '#6b7280'}}>{school.town}, {school.county}</td>
                 <td style={{padding: '1rem 1.5rem'}}>
                   <Link href={`/schools/${school.id}`} style={{color: '#667eea', marginRight: '1rem'}}>View</Link>
