@@ -79,7 +79,7 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
       .replace(/\u2013/g, '-')
       .replace(/\u2014/g, '--')
       .replace(/\u2026/g, '...')
-      .replace(/[^\x00-\x7F]/g, '?')
+      .replace(/[^\x00-\x7F]/g, '?').replace(/[\x00-\x1F\x7F]/g, ' ').trim()
   }
 
   async function handleExportPDF() {
@@ -128,8 +128,10 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
         y -= 32
 
         // Content - word wrap
-        const safeContent = safeText(note.content)
-        const words = safeContent.split(" ")
+        const contentLines = note.content.split('\n')
+        for (const contentLine of contentLines) {
+        const safeContent = safeText(contentLine)
+        const words = safeContent.split(' ')
         let line = ""
         for (const word of words) {
           const test = line ? `${line} ${word}` : word
@@ -148,6 +150,7 @@ export default function VisitLogClient({ school, initialNotes, userId }: Props) 
           page.drawText(safeText(line), { x: margin + 8, y, font, size: 10, color: rgb(0.2, 0.2, 0.2) })
           y -= 15
         }
+        } // end contentLines loop
 
         y -= 15
         if (y > 80) {
