@@ -8,7 +8,12 @@ export const dynamic = "force-dynamic"
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
   if (!session?.user || (session.user as any).role !== "acsi_admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-  const { role } = await request.json()
-  await sql`UPDATE profiles SET role = ${role} WHERE id = ${params.id}`
+  const body = await request.json()
+  if (body.region !== undefined) {
+    await sql`UPDATE profiles SET region = ${body.region || null} WHERE id = ${params.id}`
+  }
+  if (body.role !== undefined) {
+    await sql`UPDATE profiles SET role = ${body.role} WHERE id = ${params.id}`
+  }
   return NextResponse.json({ success: true })
 }
