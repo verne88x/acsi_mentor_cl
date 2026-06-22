@@ -24,6 +24,7 @@ export default async function SchoolDetailPage({ params }: { params: { id: strin
           <Link href={`/schools/${params.id}/edit`} className={styles.secondaryButton}>Edit School Info</Link>
           <Link href={`/schools/${params.id}/assessments`} className={styles.secondaryButton}>View Past Assessments</Link>
           <Link href={`/schools/${params.id}/plans`} className={styles.secondaryButton}>Action Plans</Link>
+          <Link href={`/schools/${params.id}/visits`} className={styles.secondaryButton}>📋 Visit Log</Link>
         </div>
       </div>
     </div>
