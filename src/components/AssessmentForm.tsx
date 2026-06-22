@@ -88,18 +88,9 @@ export default function AssessmentForm({ school, userId }: AssessmentFormProps) 
     try {
       const overallScore = calculateOverallScore(responses)
 
-      const { data, error } = await supabase
-        .from('assessments')
-        .insert({
-          school_id: school.id,
-          conducted_by: userId,
-          assessment_date: new Date().toISOString().split('T')[0],
-          status: status,
-          responses: responses,
-          overall_score: overallScore,
-        } as any)
-        .select()
-        .single()
+      const _res = await fetch('/api/assessments', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ school_id: school.id, assessment_date: new Date().toISOString().split('T')[0], status: 'completed', responses, overall_score: overallScore }) })
+      const data = await _res.json()
+      const error = _res.ok ? null : data.error
 
       if (error) throw error
 
