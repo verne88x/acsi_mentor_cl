@@ -23,7 +23,7 @@ export default function AdminDashboard({ schools, alerts, requests, stats }: any
     { id: 'alerts' as Tab, label: `🚨 Alerts (${alerts.length})` },
     { id: 'requests' as Tab, label: `📋 Requests (${requests.length})` },
     { id: 'mentors' as Tab, label: '👥 Mentors' },
-  { id: 'activity' as Tab, label: '📈 Activity' },
+    { id: 'activity' as Tab, label: '📈 Activity' },
   ]
 
   return (
