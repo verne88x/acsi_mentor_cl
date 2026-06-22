@@ -8,6 +8,6 @@ export const dynamic = "force-dynamic"
 export async function GET() {
   const session = await getServerSession(authOptions)
   if (!session?.user || (session.user as any).role !== "acsi_admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-  const users = await sql`SELECT id, email, full_name, role, created_at FROM profiles ORDER BY created_at DESC`
+  const users = await sql`SELECT id, email, full_name, role, region, created_at FROM profiles ORDER BY created_at DESC`
   return NextResponse.json(users)
 }
