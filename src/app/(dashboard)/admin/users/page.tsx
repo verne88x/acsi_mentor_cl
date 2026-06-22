@@ -52,6 +52,7 @@ export default function AdminUsersPage() {
                   <select value={user.role} disabled={updating === user.id} onChange={(e) => updateRole(user.id, e.target.value)} style={{padding: '0.375rem 0.75rem', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '0.875rem'}}>
                     <option value="school_admin">School Admin</option>
                     <option value="mentor">Mentor</option>
+                    <option value="regional_manager">Regional Manager</option>
                     <option value="acsi_admin">Admin</option>
                   </select>
                 </td>
