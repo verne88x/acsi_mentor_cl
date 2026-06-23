@@ -12,7 +12,7 @@ export default async function MentorDashboard() {
   if (!user || !['mentor', 'acsi_admin', 'regional_manager'].includes(user.role)) redirect('/login')
   const schools = await getUserSchools()
   const profile = await sql`SELECT region FROM profiles WHERE id = ${(session?.user as any)?.id}`
-  const userRegion = user.role === 'regional_manager' ? profile[0]?.region : null
+  const userRegion = profile[0]?.region || null
   const alerts = await detectRiskAlerts(userRegion)
   const requests = await sql`
     SELECT cr.*, s.name as school_name, s.town, s.county, p.full_name as creator_name, p.email as creator_email
