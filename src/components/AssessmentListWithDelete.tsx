@@ -134,7 +134,7 @@ export default function AssessmentListWithDelete({ assessments, schoolId, isMent
                   View Details
                 </Link>
                 <Link
-                  href={`/schools/${schoolId}/plans/new?assessment=${assessment.id}`}
+                  href={`/schools/${schoolId}/assessment/${assessment.id}/plan`}
                   style={{
                     padding: '0.5rem 1rem',
                     background: '#f0fdf4',
