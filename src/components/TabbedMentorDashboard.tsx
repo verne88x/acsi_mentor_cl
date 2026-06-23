@@ -16,7 +16,8 @@ interface TabbedMentorDashboardProps {
     averageScore: string
     highAlerts: number
     pendingRequests: number
-  }
+    userRegion?: string | null
+}
 }
 
 export default function TabbedMentorDashboard({ 
