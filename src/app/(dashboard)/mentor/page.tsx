@@ -25,5 +25,5 @@ export default async function MentorDashboard() {
     if (rows[0]?.overall_score) { totalScore += rows[0].overall_score; assessmentCount++ }
   }
   const stats = { totalSchools: schools.length, averageScore: assessmentCount > 0 ? (totalScore/assessmentCount).toFixed(1) : '0', highAlerts: alerts.filter(a => a.severity === 'high').length, pendingRequests: requests.filter((r: any) => r.status === 'pending').length }
-  return <TabbedMentorDashboard schools={schools} alerts={alerts} requests={requests} stats={stats} />
+  return <TabbedMentorDashboard schools={schools} alerts={alerts} requests={requests} stats={stats} userRegion={userRegion} />
 }
