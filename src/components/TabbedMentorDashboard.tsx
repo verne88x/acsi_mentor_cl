@@ -8,7 +8,6 @@ import styles from './TabbedMentorDashboard.module.css'
 type Tab = 'overview' | 'alerts' | 'requests' | 'schools'
 
 interface TabbedMentorDashboardProps {
-  userRegion?: string | null
   schools: any[]
   alerts: any[]
   requests: any[]
@@ -20,7 +19,7 @@ interface TabbedMentorDashboardProps {
 }
 }
 
-export default function TabbedMentorDashboard({ schools, alerts, requests, stats, userRegion }: TabbedMentorDashboardProps) {
+export default function TabbedMentorDashboard({ schools, alerts, requests, stats}: TabbedMentorDashboardProps) {
   const [activeTab, setActiveTab] = useState<Tab>('overview')
 
   const tabs = [
