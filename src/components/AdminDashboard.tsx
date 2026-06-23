@@ -135,18 +135,18 @@ export default function AdminDashboard({ schools, alerts, requests, stats }: any
                   <div key={m.id} style={{ background: 'white', borderRadius: '12px', padding: '1.25rem', border: '1px solid #e5e7eb' }}>
                     <Link href={`/admin/managers/${m.id}`} style={{ fontWeight: 600, marginBottom: '0.75rem', display: 'block', color: '#1f2937', textDecoration: 'none' }}>{m.full_name || m.email} →</Link>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                      <div style={{ textAlign: 'center', background: '#eff6ff', borderRadius: '8px', padding: '0.5rem' }}>
+                      <Link href={`/admin/managers/${m.id}`} style={{ textAlign: 'center', background: '#eff6ff', borderRadius: '8px', padding: '0.5rem', display: 'block', textDecoration: 'none', cursor: 'pointer' }}>
                         <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#3b82f6' }}>{m.total_visits}</div>
                         <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Visits</div>
-                      </div>
-                      <div style={{ textAlign: 'center', background: '#f0fdf4', borderRadius: '8px', padding: '0.5rem' }}>
+                      </Link>
+                      <Link href={`/admin/managers/${m.id}`} style={{ textAlign: 'center', background: '#f0fdf4', borderRadius: '8px', padding: '0.5rem', display: 'block', textDecoration: 'none', cursor: 'pointer' }}>
                         <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#22c55e' }}>{m.schools_visited}</div>
                         <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Schools</div>
-                      </div>
-                      <div style={{ textAlign: 'center', background: '#faf5ff', borderRadius: '8px', padding: '0.5rem' }}>
+                      </Link>
+                      <Link href={`/admin/managers/${m.id}`} style={{ textAlign: 'center', background: '#faf5ff', borderRadius: '8px', padding: '0.5rem', display: 'block', textDecoration: 'none', cursor: 'pointer' }}>
                         <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#8b5cf6' }}>{m.total_assessments}</div>
                         <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Assessments</div>
-                      </div>
+                      </Link>
                       <div style={{ textAlign: 'center', background: '#fff7ed', borderRadius: '8px', padding: '0.5rem' }}>
                         <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f59e0b' }}>{m.last_visit ? new Date(m.last_visit).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '—'}</div>
                         <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Last Visit</div>
