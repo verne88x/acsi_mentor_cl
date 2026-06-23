@@ -363,22 +363,23 @@ function SchoolsTab({ schools }: any) {
   const REGIONS = ['Nairobi Region', 'North Rift Region', 'South Rift Region', 'Nyanza Region', 'Western Region', 'Coast Region', 'Eastern Region']
   
   const filteredSchools = schools.filter((school: any) =>
-    school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     school.town?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    school.county?.toLowerCase().includes(searchTerm.toLowerCase())
+    school.county?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (!regionFilter || school.region === regionFilter)
   )
 
   return (
     <div>
-      {/* Search */}
-      <div style={{ marginBottom: '1.5rem' }}>
+      {/* Search + Region Filter */}
+      <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         <input
           type="text"
           placeholder="Search schools..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{
-            width: '100%',
+            flex: 1,
             padding: '0.75rem 1rem',
             border: '1px solid #e5e7eb',
             borderRadius: '8px',
