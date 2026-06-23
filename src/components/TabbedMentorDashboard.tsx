@@ -362,6 +362,8 @@ function RequestsTab({ requests }: any) {
 // SCHOOLS TAB
 function SchoolsTab({ schools }: any) {
   const [searchTerm, setSearchTerm] = useState('')
+  const [regionFilter, setRegionFilter] = useState('')
+  const REGIONS = ['Nairobi Region', 'North Rift Region', 'South Rift Region', 'Nyanza Region', 'Western Region', 'Coast Region', 'Eastern Region']
   
   const filteredSchools = schools.filter((school: any) =>
     school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
