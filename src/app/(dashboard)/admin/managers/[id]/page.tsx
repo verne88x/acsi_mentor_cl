@@ -27,7 +27,7 @@ export default async function ManagerDetailPage({ params }: { params: { id: stri
            COUNT(DISTINCT a.id) as total_assessments, MAX(mn.visit_date) as last_visit
     FROM profiles p
     LEFT JOIN mentor_notes mn ON mn.mentor_id = p.id
-    LEFT JOIN assessments a ON a.conducted_by = p.id
+    LEFT JOIN assessments a ON (a.conducted_by = p.id OR EXISTS (SELECT 1 FROM schools s WHERE s.id = a.school_id AND s.region = p.region AND p.region IS NOT NULL))
     WHERE p.id = ${params.id}
   `)[0] as any
 
