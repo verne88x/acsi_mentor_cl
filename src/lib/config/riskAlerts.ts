@@ -7,9 +7,9 @@ export interface RiskAlert {
   severity: 'high' | 'medium' | 'low'; message: string; details?: any; created_at: Date
 }
 
-export async function detectRiskAlerts(): Promise<RiskAlert[]> {
+export async function detectRiskAlerts(region?: string | null): Promise<RiskAlert[]> {
   const alerts: RiskAlert[] = []
-  const schools = await sql`SELECT * FROM schools`
+  const schools = region ? await sql`SELECT * FROM schools WHERE region = ${region}` : await sql`SELECT * FROM schools`
   const sixMonthsAgo = new Date(); sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
   for (const school of schools) {
     const latest = (await sql`SELECT * FROM assessments WHERE school_id = ${school.id} AND status = 'completed' ORDER BY assessment_date DESC LIMIT 1`)[0]
