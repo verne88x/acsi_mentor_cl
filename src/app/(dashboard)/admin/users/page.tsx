@@ -19,6 +19,19 @@ export default function AdminUsersPage() {
     setLoading(false)
   }
 
+  const [resetting, setResetting] = useState<string | null>(null)
+  const [newPassword, setNewPassword] = useState<Record<string, string>>({})
+
+  async function resetPassword(userId: string) {
+    const pwd = newPassword[userId]
+    if (!pwd || pwd.length < 6) { alert('Password must be at least 6 characters'); return }
+    setResetting(userId)
+    const res = await fetch(`/api/admin/users/${userId}/reset-password`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ password: pwd }) })
+    if (res.ok) { alert('Password reset successfully!'); setNewPassword(prev => ({ ...prev, [userId]: '' })) }
+    else { alert('Failed to reset password') }
+    setResetting(null)
+  }
+
   async function updateField(userId: string, field: string, value: string) {
     setUpdating(userId)
     await fetch(`/api/admin/users/${userId}`, { method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ [field]: value }) })
@@ -49,6 +62,7 @@ export default function AdminUsersPage() {
               <th style={{padding:'1rem 1.5rem',textAlign:'left'}}>Role</th>
               <th style={{padding:'1rem 1.5rem',textAlign:'left'}}>Region</th>
               <th style={{padding:'1rem 1.5rem',textAlign:'left'}}>Change Role</th>
+              <th style={{padding:'1rem 1.5rem',textAlign:'left'}}>Reset Password</th>
             </tr>
           </thead>
           <tbody>
@@ -80,6 +94,16 @@ export default function AdminUsersPage() {
                     <option value="regional_manager">Regional Manager</option>
                     <option value="acsi_admin">Admin</option>
                   </select>
+                </td>
+                <td style={{padding:'1rem 1.5rem'}}>
+                  <div style={{display:'flex',gap:'0.5rem'}}>
+                    <input type="password" placeholder="New password" value={newPassword[user.id]||''} onChange={e => setNewPassword(prev => ({...prev, [user.id]: e.target.value}))}
+                      style={{padding:'0.375rem 0.75rem',border:'1px solid #d1d5db',borderRadius:'6px',fontSize:'0.875rem',width:'130px'}} />
+                    <button onClick={() => resetPassword(user.id)} disabled={resetting === user.id || !newPassword[user.id]}
+                      style={{padding:'0.375rem 0.75rem',background:resetting===user.id||!newPassword[user.id]?'#d1d5db':'#ef4444',color:'white',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'0.875rem',whiteSpace:'nowrap'}}>
+                      {resetting===user.id?'...':'Reset'}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
