@@ -3,12 +3,17 @@ import { getCurrentUser, getUserSchools } from '@/lib/auth'
 import { detectRiskAlerts } from '@/lib/config/riskAlerts'
 import sql from '@/lib/db'
 import TabbedMentorDashboard from '@/components/TabbedMentorDashboard'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/auth'
 
 export default async function MentorDashboard() {
+  const session = await getServerSession(authOptions)
   const user = await getCurrentUser()
   if (!user || !['mentor', 'acsi_admin', 'regional_manager'].includes(user.role)) redirect('/login')
   const schools = await getUserSchools()
-  const alerts = await detectRiskAlerts()
+  const profile = await sql`SELECT region FROM profiles WHERE id = ${(session?.user as any)?.id}`
+  const userRegion = user.role === 'regional_manager' ? profile[0]?.region : null
+  const alerts = await detectRiskAlerts(userRegion)
   const requests = await sql`
     SELECT cr.*, s.name as school_name, s.town, s.county, p.full_name as creator_name, p.email as creator_email
     FROM consulting_requests cr JOIN schools s ON s.id = cr.school_id JOIN profiles p ON p.id = cr.created_by
