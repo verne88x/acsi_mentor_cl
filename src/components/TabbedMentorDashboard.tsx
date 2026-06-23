@@ -17,7 +17,6 @@ interface TabbedMentorDashboardProps {
     averageScore: string
     highAlerts: number
     pendingRequests: number
-    userRegion?: string | null
 }
 }
 
