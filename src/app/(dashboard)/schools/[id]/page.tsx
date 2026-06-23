@@ -1,8 +1,7 @@
 import sql from '@/lib/db'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import ShareAssessmentButton from '@/components/ShareAssessmentButton'
-import ShareConsultationButton from '@/components/ShareConsultationButton'
+import SchoolActions from '@/components/SchoolActions'
 import styles from './school.module.css'
 
 export default async function SchoolDetailPage({ params }: { params: { id: string } }) {
@@ -18,9 +17,7 @@ export default async function SchoolDetailPage({ params }: { params: { id: strin
           <div><h1>{school.name}</h1><p className={styles.location}>{school.town}, {school.county}</p></div>
         </div>
         <div className={styles.actionsGrid}>
-          <Link href={`/schools/${params.id}/assessment`} className={styles.primaryButton}><span>New Health Check Assessment</span><span>→</span></Link>
-          <ShareAssessmentButton schoolId={params.id} />
-          <ShareConsultationButton schoolId={params.id} />
+          <SchoolActions schoolId={params.id} />
           <Link href={`/schools/${params.id}/growth`} className={styles.secondaryButton}>📈 Growth Over Time</Link>
           <Link href={`/schools/${params.id}/consulting-request`} className={styles.secondaryButton}>Consultation Form</Link>
           <Link href={`/schools/${params.id}/edit`} className={styles.secondaryButton}>Edit School Info</Link>
