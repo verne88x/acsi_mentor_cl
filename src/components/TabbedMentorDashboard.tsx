@@ -389,12 +389,6 @@ function SchoolsTab({ schools }: any) {
           <option value="">All Regions</option>
           {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
         </select>
-        {userRegion && (
-          <button onClick={() => setRegionFilter(regionFilter === userRegion ? '' : userRegion)}
-            style={{padding:'0.75rem 1rem',background:regionFilter===userRegion?'#667eea':'#f3f4f6',color:regionFilter===userRegion?'white':'#374151',border:'none',borderRadius:'8px',fontSize:'0.875rem',cursor:'pointer',fontWeight:500,whiteSpace:'nowrap'}}>
-            {regionFilter === userRegion ? '✓ My Region' : 'My Region'}
-          </button>
-        )}
       </div>
 
       {/* Schools Grid */}
