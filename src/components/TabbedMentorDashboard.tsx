@@ -8,6 +8,7 @@ import styles from './TabbedMentorDashboard.module.css'
 type Tab = 'overview' | 'alerts' | 'requests' | 'schools'
 
 interface TabbedMentorDashboardProps {
+  userRegion?: string | null
   schools: any[]
   alerts: any[]
   requests: any[]
