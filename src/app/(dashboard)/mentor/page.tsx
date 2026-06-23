@@ -6,7 +6,7 @@ import TabbedMentorDashboard from '@/components/TabbedMentorDashboard'
 
 export default async function MentorDashboard() {
   const user = await getCurrentUser()
-  if (!user || (user.role !== 'mentor' && user.role !== 'acsi_admin')) redirect('/login')
+  if (!user || !['mentor', 'acsi_admin', 'regional_manager'].includes(user.role)) redirect('/login')
   const schools = await getUserSchools()
   const alerts = await detectRiskAlerts()
   const requests = await sql`
