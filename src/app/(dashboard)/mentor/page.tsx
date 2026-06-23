@@ -22,7 +22,7 @@ export default async function MentorDashboard() {
   let totalScore = 0, assessmentCount = 0
   for (const school of schools) {
     const rows = await sql`SELECT overall_score FROM assessments WHERE school_id = ${(school as any).id} AND status = 'completed' ORDER BY assessment_date DESC LIMIT 1`
-    if (rows[0]?.overall_score) { totalScore += rows[0].overall_score; assessmentCount++ }
+    if (rows[0]?.overall_score) { totalScore += parseFloat(String(rows[0].overall_score)); assessmentCount++ }
   }
   const stats = { totalSchools: schools.length, averageScore: assessmentCount > 0 ? parseFloat(String(totalScore/assessmentCount)).toFixed(1) : 'N/A', highAlerts: alerts.filter(a => a.severity === 'high').length, pendingRequests: requests.filter((r: any) => r.status === 'pending').length }
   return <TabbedMentorDashboard schools={schools} alerts={alerts} requests={requests} stats={stats} />
