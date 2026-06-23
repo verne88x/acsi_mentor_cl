@@ -386,6 +386,17 @@ function SchoolsTab({ schools }: any) {
             fontSize: '1rem'
           }}
         />
+        <select value={regionFilter} onChange={e => setRegionFilter(e.target.value)}
+          style={{padding:'0.75rem',border:'1px solid #e5e7eb',borderRadius:'8px',fontSize:'0.875rem',cursor:'pointer'}}>
+          <option value="">All Regions</option>
+          {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+        </select>
+        {userRegion && (
+          <button onClick={() => setRegionFilter(regionFilter === userRegion ? '' : userRegion)}
+            style={{padding:'0.75rem 1rem',background:regionFilter===userRegion?'#667eea':'#f3f4f6',color:regionFilter===userRegion?'white':'#374151',border:'none',borderRadius:'8px',fontSize:'0.875rem',cursor:'pointer',fontWeight:500,whiteSpace:'nowrap'}}>
+            {regionFilter === userRegion ? '✓ My Region' : 'My Region'}
+          </button>
+        )}
       </div>
 
       {/* Schools Grid */}
