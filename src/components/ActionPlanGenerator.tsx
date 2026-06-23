@@ -63,7 +63,7 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
 
       if (itemsError) throw itemsError
 
-      router.push(`/schools/${school.id}`)
+      router.push(`/schools/${school.id}/plans`)
     } catch (error) {
       console.error('Error saving plan:', error)
       alert('Failed to save action plan. Please try again.')
@@ -87,7 +87,7 @@ export default function ActionPlanGenerator({ assessment, school }: ActionPlanGe
   return (
     <div className={styles.container}>
       <button
-        onClick={() => router.push(`/schools/${school.id}`)}
+        onClick={() => router.push(`/schools/${school.id}/plans`)}
         className={styles.backButton}
       >
         ← Back to School
