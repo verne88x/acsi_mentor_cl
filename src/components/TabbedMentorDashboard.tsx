@@ -21,12 +21,7 @@ interface TabbedMentorDashboardProps {
 }
 }
 
-export default function TabbedMentorDashboard({ 
-  schools, 
-  alerts, 
-  requests,
-  stats 
-}: TabbedMentorDashboardProps) {
+export default function TabbedMentorDashboard({ schools, alerts, requests, stats, userRegion }: TabbedMentorDashboardProps) {
   const [activeTab, setActiveTab] = useState<Tab>('overview')
 
   const tabs = [
