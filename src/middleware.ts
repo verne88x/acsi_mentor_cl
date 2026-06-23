@@ -14,7 +14,7 @@ export default withAuth(
       if (role === "school_admin") return NextResponse.redirect(new URL("/school-admin", request.url))
     }
 
-    if (pathname.startsWith("/admin") && role !== "acsi_admin") {
+    if (pathname.startsWith("/admin") && role !== "acsi_admin" && !(pathname === "/admin/schools/new" && role === "regional_manager")) {
       if (role === "regional_manager" || role === "mentor") return NextResponse.redirect(new URL("/mentor", request.url))
       return NextResponse.redirect(new URL("/login", request.url))
     }
