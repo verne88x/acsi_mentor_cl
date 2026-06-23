@@ -16,11 +16,8 @@ export async function getCurrentUser() {
 export async function getUserSchools() {
   const session = await getServerSession(authOptions)
   if (!session?.user) return []
-  return await sql`
-    SELECT s.id, s.name, s.county, s.town
-    FROM school_members sm JOIN schools s ON s.id = sm.school_id
-    WHERE sm.user_id = ${(session.user as any).id}
-  `
+  // All users see all schools - filter by region in UI
+  return await sql`SELECT * FROM schools ORDER BY region NULLS LAST, name`
 }
 
 export function getRoleBasedRedirect(role: string): string {
