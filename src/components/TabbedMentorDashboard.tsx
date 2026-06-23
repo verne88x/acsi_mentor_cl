@@ -391,6 +391,9 @@ function SchoolsTab({ schools }: any) {
         </select>
       </div>
 
+      {/* Add School Button */}
+      <div style={{display:"flex",justifyContent:"flex-end",marginBottom:"1rem"}}><a href="/admin/schools/new" style={{padding:"0.625rem 1.25rem",background:"#667eea",color:"white",borderRadius:"8px",textDecoration:"none",fontWeight:600,fontSize:"0.875rem"}}>+ Add School</a></div>
+
       {/* Schools Grid */}
       {filteredSchools.length === 0 ? (
         <div style={{
