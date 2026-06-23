@@ -29,8 +29,8 @@ export async function GET() {
            COUNT(DISTINCT a.id) as total_assessments
     FROM profiles p
     LEFT JOIN mentor_notes mn ON mn.mentor_id = p.id AND mn.is_private = false
-    LEFT JOIN assessments a ON a.conducted_by = p.id
-    WHERE p.role IN ('mentor', 'acsi_admin', 'regional_manager', 'school_admin')
+    LEFT JOIN assessments a ON (a.conducted_by = p.id OR (p.region IS NOT NULL AND EXISTS (SELECT 1 FROM schools s WHERE s.id = a.school_id AND s.region = p.region)))
+    WHERE p.role IN ('mentor', 'acsi_admin', 'regional_manager')
     GROUP BY p.id, p.full_name, p.email
     ORDER BY total_visits DESC
   `
