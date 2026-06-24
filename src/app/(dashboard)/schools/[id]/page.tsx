@@ -19,7 +19,6 @@ export default async function SchoolDetailPage({ params }: { params: { id: strin
         <div className={styles.actionsGrid}>
           <SchoolActions schoolId={params.id} />
           <Link href={`/schools/${params.id}/growth`} className={styles.secondaryButton}>📈 Growth Over Time</Link>
-          <Link href={`/schools/${params.id}/consulting-request`} className={styles.secondaryButton}>Consultation Form</Link>
           <Link href={`/schools/${params.id}/edit`} className={styles.secondaryButton}>Edit School Info</Link>
           <Link href={`/schools/${params.id}/assessments`} className={styles.secondaryButton}>View Past Assessments</Link>
           <Link href={`/schools/${params.id}/plans`} className={styles.secondaryButton}>Action Plans</Link>
